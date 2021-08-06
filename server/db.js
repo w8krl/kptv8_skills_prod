@@ -21,8 +21,7 @@ const db = mysql.createConnection({
     database: "res_mgr"
 })
 
-// test file upload
-//Test123
+
 
 app.post('/create', (req, res)=>{
     // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
