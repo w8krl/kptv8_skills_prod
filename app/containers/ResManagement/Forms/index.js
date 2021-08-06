@@ -1,0 +1,1 @@
+export AddResource from './AddResource';
