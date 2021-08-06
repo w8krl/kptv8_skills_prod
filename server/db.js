@@ -21,6 +21,8 @@ const db = mysql.createConnection({
     database: "res_mgr"
 })
 
+// test123
+
 app.post('/create', (req, res)=>{
     // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
     const name = req.body.name;
