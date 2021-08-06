@@ -21,11 +21,6 @@ const db = mysql.createConnection({
     database: "res_mgr"
 })
 
-// test file upload
-//Test123
-
-// Karl JM Webster
-// Karl JM Webster extra
 
 app.post('/create', (req, res)=>{
     // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
