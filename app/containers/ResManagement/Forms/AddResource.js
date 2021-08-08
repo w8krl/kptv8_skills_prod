@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import CountrySelect from '../AutoCountries'
+import FileInput from '../FileInput';
 
 import {
   TextFieldRedux,
@@ -274,9 +274,23 @@ class NewResFrm extends Component {
                     <FormControlLabel value="Other" control={<Radio />} label="Other" />
                   </Field>
                 </div>
-
                 <div>
-                  <Button variant="contained" color="secondary" type="submit" disabled={submitting}>
+                  <div>
+                    <Field
+                      type="file"
+                      name="filexxx"
+                      id="raised-button-file"
+                      component={FileInput}
+                    />
+                    <label htmlFor="raised-button-file">
+                      <Button variant="contained" color="primary" component="span">
+                        Upload CV
+                      </Button>
+                    </label>
+                  </div>
+                </div>
+                <div style={{paddingTop: "2rem"}}>
+                  <Button fullWidth variant="contained" color="secondary" type="submit" disabled={submitting}>
                     Submit
                   </Button>
                   <Button

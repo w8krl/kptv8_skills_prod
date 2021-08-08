@@ -26,8 +26,8 @@ function ReduxForm(props) {
   };
 
   const handleSubmit = (values) =>{
-    Axios.post('http://localhost:8888/create', values).then(() => {
-      console.log("Success");
+    Axios.post('http://localhost:8888/upload', values).then(() => {
+      console.log(console.log(values));
       setValueForm(values);
     });
     

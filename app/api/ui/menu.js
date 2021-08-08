@@ -36,13 +36,13 @@ module.exports = [
       {
         key: 'not_found_page',
         name: 'Add New Resource',
-        icon: 'pets',
+        icon: 'account_box',
         link: '/app/add-resource'
       },
       {
         key: 'not_found_page',
         name: 'Resources',
-        icon: 'pets',
+        icon: 'account_box',
         link: '/app/resource-list'
       }
     ]
