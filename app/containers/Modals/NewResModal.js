@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // Test
 
+// Sample code
+
 const useStyles = makeStyles((theme) => ({
     large: {
       minWidth: "70%"
