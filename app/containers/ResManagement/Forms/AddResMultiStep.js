@@ -85,6 +85,11 @@ class MasterForm extends React.Component {
         this.setState({ ['file']: file, ['fileName']: file.name })
     };
 
+    handleSubmit = event => {
+        event.preventDefault()
+        console.log(this.state);
+    }
+
     _next = () => {
         let currentStep = this.state.currentStep
         currentStep = currentStep >= 2 ? 3 : currentStep + 1
@@ -165,7 +170,7 @@ class MasterForm extends React.Component {
                             fileChange={this.fileChange}
                             fileName={this.state.fileName}
                             classes={classes}
-                            handleSubmit={this.props.handleSubmit}
+                            handleSubmit={this.props.popUp}
                         />
                         {this.previousButton(classes)}
                         {this.nextButton(classes)}
