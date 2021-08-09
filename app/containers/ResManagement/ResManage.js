@@ -16,7 +16,7 @@ export default function DataTable() {
 
   return (
     <div>
-      <NewResModal />
+      {/* <NewResModal /> */}
       
       <ResList />
     </div>
