@@ -4,22 +4,34 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Axios from 'axios';
-import FileInput from '../FileInput';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
         '& .MuiTextField-root': {
             margin: theme.spacing(1),
-            width: 600,
+            width: 400,
+            minHeignt: 600
             // display: "block"
         },
 
     },
-    test: { display: "block" }
+    tabs: {
+        flexGrow: 1,
+        // width: '100%',
+        backgroundColor: theme.palette.background.paper,
+    },
+    submit: { marginTop: "5rem" }
 }));
 
 
-const initData = {
+const formData = {
     name: 'Karl Webster',
     email: 'karl.webster@kptv8.com',
     title: 'Mr',
@@ -35,17 +47,15 @@ const initData = {
 
 
 
-
-
 export default function ValidationTextFields() {
     const classes = useStyles();
 
     const [formData, updateFormData] = React.useState();
     const [selectedFile, setSelectedFile] = React.useState();
 
-    //updateFormData(...formData,initData)
-
     const handleChange = (e) => {
+
+        console.log(formData);
         updateFormData({
             ...formData,
 
@@ -54,44 +64,72 @@ export default function ValidationTextFields() {
         });
     };
 
+    const [selectedTab, setSelectedTab] = useState(0);
+    const handleTabChange = (event, newValue) => {
+        setSelectedTab(newValue);
+        console.log(formData);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault()
         const form_data = new FormData();
-        for ( var key in formData ) {
+        for (var key in formData) {
             form_data.append(key, formData[key]);
         }
         form_data.append("file", selectedFile);
 
         Axios.post('http://localhost:8888/newRes', form_data)
-        .then(function (response) {
-            console.log(response.data);
-          })
+            .then(function (response) {
+                console.log(response.data);
+            })
 
     };
 
     return (
 
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
-                <TextField fullWidth label="Full Name" name="name" onChange={handleChange} />
-                <TextField fullWidth label="Email" placeholder="user@kptv8.com" name="email" className={classes.test} onChange={handleChange} />
-                <TextField fullWidth label="Title" variant="filled" name="title" onChange={handleChange} />
-                <TextField fullWidth label="Primary Tel." variant="filled" name="pri_contact_no" onChange={handleChange} />
-                <TextField label="Secondary Tel." variant="outlined" fullWidth name="sec_contact_no" onChange={handleChange} />
-                <TextField label="Contract Type (options)" variant="outlined" fullWidth name="contract_type" onChange={handleChange} />
-                <TextField label="Country" variant="outlined" fullWidth name="country" onChange={handleChange} />
-                <TextField label="Region" variant="outlined" fullWidth name="region" onChange={handleChange} />
-                <TextField label="Comments" variant="outlined" fullWidth name="comments" onChange={handleChange} />
-                <TextField label="Management Co." variant="outlined" fullWidth name="management_co" onChange={handleChange} />
-                <TextField label="Contract Type" variant="outlined" fullWidth name="co_type" onChange={handleChange} />
+        <div className={classes.root}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <AppBar position="static" color="default">
+                <Tabs
+                    value={selectedTab}
+                    onChange={handleTabChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
+                >
+                    <Tab label="Personal Details" />
+                    <Tab label="Company Details" />
+                    <Tab label="Upload CV"/>
+                    <Tab label="Submit"/>
+                </Tabs>
+            </AppBar>
+
+            
+            {selectedTab === 0 && <div>
+                <TextField label="Full Name" name="name" onChange={handleChange} />
+                <TextField label="Email" placeholder="user@kptv8.com" name="email" onChange={handleChange} />
+                <TextField label="Title" variant="outlined" name="title" onChange={handleChange} />
+                <TextField label="Primary Tel." variant="outlined" name="pri_contact_no" onChange={handleChange} />
+                <TextField label="Secondary Tel." variant="outlined" name="sec_contact_no" onChange={handleChange} />
+                <TextField label="Contract Type (options)" variant="outlined" name="contract_type" onChange={handleChange} />
+                <TextField label="Country" variant="outlined" name="country" onChange={handleChange} />
+                <TextField label="Region" variant="outlined" name="region" onChange={handleChange} />
+                <TextField label="Comments" variant="outlined" name="comments" onChange={handleChange} />
+                <TextField label="Management Co." variant="outlined" name="management_co" onChange={handleChange} />
                 <input name="file" type="file" onChange={(e) => setSelectedFile(e.target.files[0])} />
-                <div style={{ paddingTop: "2rem" }}>
-                    <Button variant="contained" color="secondary" type="submit">Submit</Button>
-                    <Button type="button">Reset</Button>
                 </div>
-            </Grid>
-        </form>
+}
+             </form>
+        </div>
+
+
+
 
     );
 }
+
+
+
+

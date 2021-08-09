@@ -10,10 +10,10 @@ module.exports = [
         title: true,
       },
       {
-        key: 'cv_search',
-        name: 'CV Search',
+        key: 'cv_status',
+        name: 'CV List',
         icon: 'account_box',
-        link: '/app'
+        link: '/app/CV-list'
       },
       {
         key: 'people_search',

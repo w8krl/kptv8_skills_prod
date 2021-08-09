@@ -39,6 +39,7 @@ app.post('/newRes', (req, res)=>{
     console.log(req.body);
 
     let file_uploaded = false;
+    let cv_path = false;
 
     if (req.files !== null) {
         uplFile = req.files.file;
@@ -52,14 +53,15 @@ app.post('/newRes', (req, res)=>{
                 console.log("Error moving newRes file");
             } else {
                 file_uploaded = true;
+                cv_path = fName;
             }
             // res.send('File uploaded to ' + uploadPath);
         });
     }
 
     // res.send("Response:" + req.body);
-    db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type) values (?,?,?,?,?,?,?,?,?,?,?)',
-     [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type], 
+    db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type) values (?,?,?,?,?,?,?,?,?,?,?,?)',
+     [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type, cv_path], 
     
     (err, result) => {
         if(err){

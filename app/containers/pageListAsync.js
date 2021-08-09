@@ -81,6 +81,10 @@ export const ResourceSearch = loadable(() =>
     fallback: <Loading />,
   });  
   export const ResList = loadable(() =>
-  import ('./ResManagement/ResList'), {
+  import ('./ResManagement/ResManage'), {
+    fallback: <Loading />,
+  });  
+  export const CvList = loadable(() =>
+  import ('./CvList/CvList'), {
     fallback: <Loading />,
   });  
