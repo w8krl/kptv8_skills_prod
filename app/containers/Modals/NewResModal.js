@@ -11,11 +11,6 @@ import MultiStepFrm from '../ResManagement/Forms/AddResMultiStep';
 import { makeStyles } from '@material-ui/core/styles';
 
 
-// Test 
-
-// Test 123 
-
-// Test 1234
 
 const useStyles = makeStyles((theme) => ({
     large: {
