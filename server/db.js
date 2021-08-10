@@ -1,4 +1,5 @@
 const express = require('express')
+// const promise = require('await-callback')
 const mysql = require("mysql");
 const cors = require('cors');
 const app = express()
@@ -23,7 +24,7 @@ const db = mysql.createConnection({
 
 
 app.post('/newRes', (req, res)=>{
-    // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
+
     const name = req.body.name;
     const email = req.body.email;
     const title = req.body.title;
@@ -39,40 +40,36 @@ app.post('/newRes', (req, res)=>{
     console.log(req.body);
 
     let file_uploaded = false;
-    let cv_path = false;
+    let cv_path = '';
+    let fName = false;
 
-    if (req.files !== null) {
-        uplFile = req.files.file;
-        
-        fName = uplFile.name.replace(/\s/g, '_');
 
-        uploadPath = __dirname + '/uploads/cv_data/' + uplFile.name;
-        uplFile.mv(uploadPath, function (err) {
-            if (err) {
-                // return res.status(500).send(err);
-                console.log("Error moving newRes file");
-            } else {
-                file_uploaded = true;
-                cv_path = fName;
-            }
-            // res.send('File uploaded to ' + uploadPath);
-        });
-    }
-
-    // res.send("Response:" + req.body);
-    db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type) values (?,?,?,?,?,?,?,?,?,?,?,?)',
-     [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type, cv_path], 
-    
-    (err, result) => {
-        if(err){
-            res.send(err);
-        } else {
-            console.log("Form processed successfully");
-            res.send("New record added to DB, CV upload status: " + file_uploaded);
+    async function processFiles() {
+        if (req.files !== null) {
+            let uplFile = req.files.file;
+            fName = uplFile.name.replace(/\s/g, '_');
+            let uploadPath = __dirname + '/uploads/cv_data/' + fName;
+            cv_path = fName;
+            await uplFile.mv(uploadPath);
         }
     }
-    )
+    processFiles().then(() => {
+        db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type, cv_path) values (?,?,?,?,?,?,?,?,?,?,?,?)',
+            [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type, cv_path],
 
+            (err, result) => {
+                if (err) {
+                    res.send(err);
+                } else {
+
+                    console.log("New resource processed successfully");
+                    res.send("New record added to DB, CV upload status: " + file_uploaded);
+
+                }
+            }
+        )
+    }).catch(e => console.log(e));
+    
 })
 
 app.post('/getRes', (req, res)=>{
@@ -87,15 +84,6 @@ app.post('/getRes', (req, res)=>{
 
 })
 
-// app.post('/upload', function (req, res) {
-//     let uplFile;
-//     let uploadPath;
-
-//     console.log(req.files.file);
-// });
-
-
-  
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
   })

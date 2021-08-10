@@ -4,8 +4,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-
-
+import Axios from 'axios';
 
 const theme = createTheme({
     overrides: {
@@ -63,8 +62,7 @@ class MasterForm extends React.Component {
                 region: '',
                 comments: '',
                 management_co: '',
-                co_type: '',
-                username: '',
+                co_type: ''
             },
 
         }
@@ -85,10 +83,20 @@ class MasterForm extends React.Component {
         this.setState({ ['file']: file, ['fileName']: file.name })
     };
 
-    handleSubmit = event => {
-        event.preventDefault()
-        console.log(this.state);
-    }
+    handleSubmit = (e) => {
+        e.preventDefault()
+        const form_data = new FormData();
+        for (var key in this.state.formData) {
+            form_data.append(key, this.state.formData[key]);
+        }
+        form_data.append("file", this.state.file);
+        form_data.append("fileName", this.state.fileName);
+
+        Axios.post('http://localhost:8888/newRes', form_data)
+            .then(function (response) {
+                console.log(response.data);
+            })
+    };
 
     _next = () => {
         let currentStep = this.state.currentStep
@@ -139,6 +147,7 @@ class MasterForm extends React.Component {
 
     render() {
         const { classes } = this.props;
+
         return (
             <ThemeProvider theme={theme}>
                 <React.Fragment>
@@ -163,6 +172,7 @@ class MasterForm extends React.Component {
                             handleChange={this.handleChange}
                             comments={this.state.formData.comments}
                             contract_type={this.state.formData.contract_type}
+                            co_type={this.state.formData.co_type}
                             management_co={this.state.formData.management_co}
                         />
                         <Step3
@@ -170,7 +180,7 @@ class MasterForm extends React.Component {
                             fileChange={this.fileChange}
                             fileName={this.state.fileName}
                             classes={classes}
-                            handleSubmit={this.props.popUp}
+                            handleSubmit={this.handleSubmit}
                         />
                         {this.previousButton(classes)}
                         {this.nextButton(classes)}
@@ -209,9 +219,8 @@ function Step2(props) {
         <div className="form-group">
             <TextField label="Contract Type (options)" variant="outlined" name="contract_type" value={props.contract_type} onChange={props.handleChange} />
             <TextField label="Management Co." variant="outlined" name="management_co" value={props.management_co} onChange={props.handleChange} />
+            <TextField label="Company Type" variant="outlined" name="co_type" value={props.co_type} onChange={props.handleChange} />
             <TextField label="Comments" variant="outlined" name="comments" value={props.comments} onChange={props.handleChange} />
-
-
         </div>
     );
 }

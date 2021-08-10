@@ -24,3 +24,4 @@ yarn-error.log*
 
 SSL_CRT_FILE=cert/ca.crt
 SSL_KEY_FILE=cert/ca.key
+server/uploads/cv_data/
