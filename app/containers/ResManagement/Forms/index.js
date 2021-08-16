@@ -1,1 +1,1 @@
-export AddResource from './AddResource';
+export NewRes from './NewRes';

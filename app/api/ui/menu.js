@@ -10,10 +10,10 @@ module.exports = [
         title: true,
       },
       {
-        key: 'cv_search',
-        name: 'CV Search',
+        key: 'cv_status',
+        name: 'CV List',
         icon: 'account_box',
-        link: '/app'
+        link: '/app/CV-list'
       },
       {
         key: 'people_search',
@@ -36,13 +36,13 @@ module.exports = [
       {
         key: 'not_found_page',
         name: 'Add New Resource',
-        icon: 'pets',
+        icon: 'account_box',
         link: '/app/add-resource'
       },
       {
         key: 'not_found_page',
         name: 'Resources',
-        icon: 'pets',
+        icon: 'account_box',
         link: '/app/resource-list'
       }
     ]

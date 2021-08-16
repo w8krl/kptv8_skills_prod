@@ -77,10 +77,14 @@ export const ResourceSearch = loadable(() =>
     fallback: <Loading />,
   });  
   export const NewEmpFrm = loadable(() =>
-  import ('./ResManagement/ReduxForm'), {
+  import ('./ResManagement/Forms/NewRes'), {
     fallback: <Loading />,
   });  
   export const ResList = loadable(() =>
-  import ('./ResManagement/ResList'), {
+  import ('./ResManagement/ResManage'), {
+    fallback: <Loading />,
+  });  
+  export const CvList = loadable(() =>
+  import ('./CvList/CvList'), {
     fallback: <Loading />,
   });  

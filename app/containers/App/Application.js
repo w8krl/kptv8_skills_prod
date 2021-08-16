@@ -13,6 +13,7 @@ import {
   Parent,
   ResourceSearch,
   Matrix,
+  CvList,
   NewEmpFrm,
   ResList
 } from '../pageListAsync';
@@ -36,6 +37,7 @@ function Application(props) {
         <Route path="/app/Matrix" component={Matrix} />
         <Route path="/app/add-resource" component={NewEmpFrm} />
         <Route path="/app/resource-list" component={ResList} />
+        <Route path="/app/CV-list" component={CvList} />
         <Route component={NotFound} />
       </Switch>
     </Dashboard>
