@@ -69,7 +69,7 @@ export const NotFoundDedicated = loadable(() =>
     fallback: <Loading />,
   });
 export const ResourceSearch = loadable(() =>
-  import ('./Skills/ResourceSearch'), {
+  import ('./Skills/SearchUi'), {
     fallback: <Loading />,
   });
   export const Matrix = loadable(() =>
