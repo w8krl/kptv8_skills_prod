@@ -1,4 +1,5 @@
 import React from "react";
+import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
 
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 
@@ -15,8 +16,10 @@ import {
   WithSearch
 } from "@elastic/react-search-ui";
 import { Layout } from "@elastic/react-search-ui-views";
-import "@elastic/react-search-ui-views/lib/styles/styles.css";
+import styles from  "@elastic/react-search-ui-views/lib/styles/styles.css";
 
+
+console.log(styles)
 import {
   buildAutocompleteQueryConfig,
   buildFacetConfigFromConfig,
@@ -43,7 +46,12 @@ const config = {
   alwaysSearchOnInitialLoad: true
 };
 
-export default function App() {
+const useStyles = makeStyles(theme => ({
+
+}));
+
+
+export default function App(props) {
   return (
     <SearchProvider config={config}>
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
