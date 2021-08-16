@@ -26,6 +26,10 @@ const styles = theme => ({
         position:"absolute",
         right: "1rem",
         top:"1rem"
+    },
+    resModalButton:{
+        marginBottom:"1rem",
+        marginRight: "1rem"
     }
   });
 
@@ -65,9 +69,12 @@ alert("test")
         const { classes } = this.props;
         return (
             <div>
-                <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-                    + Resource
+                <Button className={classes.resModalButton} variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                    Add Resource
                 </Button>
+                <Button className={classes.resModalButton} variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                    Modify Resource
+                </Button>                
                 <Dialog classes={{ paper: classes.paperScrollPaper }} open={this.state.open} maxWidth="sm" onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add New Resource 🧙‍♂️
 

@@ -6,6 +6,7 @@ import Chip from '@material-ui/core/Chip';
 import MUIDataTable from 'mui-datatables';
 import axios from "axios";
 
+
 import { DataGrid, GridToolbarContainer,
   GridToolbarExport} from '@material-ui/data-grid';
 
@@ -100,7 +101,9 @@ const columns = [
   },
 ];
 
-
+function handleCellEditCommit(e){
+  window.confirm("Are you sure?");
+}
 
 export default function DataTable() {
 
@@ -134,6 +137,7 @@ export default function DataTable() {
         columns={columns}
         pageSize={30}
         checkboxSelection
+        onCellEditCommit={handleCellEditCommit}
         disableSelectionOnClick
         components={{
           Toolbar: CustomToolbar,

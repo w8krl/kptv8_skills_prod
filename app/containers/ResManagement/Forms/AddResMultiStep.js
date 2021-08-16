@@ -4,7 +4,9 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Axios from 'axios';
+import SkillSelect from '../AddSkills';
 
 const theme = createTheme({
     overrides: {
@@ -151,7 +153,7 @@ class MasterForm extends React.Component {
         return (
             <ThemeProvider theme={theme}>
                 <React.Fragment>
-                    <h1>New Resource Wizard</h1>
+                    {/* <h1>New Resource Wizard</h1> */}
                     <p>Step {this.state.currentStep} </p>
                     <form onSubmit={this.popUp}>
 
@@ -237,11 +239,18 @@ function Step3(props) {
 
     return (
         <React.Fragment>
-            <div className="form-group">
-                <Button variant="contained" onClick={handleClick} color="default" className={classes.button} startIcon={<CloudUploadIcon />}>Upload</Button>
-                <label htmlFor="file">{props.fileName}</label>
-                <input ref={hiddenFileInput} hidden name="file" type="file" onChange={props.fileChange} />
-            </div>
+            <Grid container alignItems="center">
+                <Grid container xs={12}>
+                    <Button variant="contained" onClick={handleClick} color="default" className={classes.button} startIcon={<CloudUploadIcon />}>Upload CV</Button>
+                    <label htmlFor="file">{props.fileName}</label>
+                    <input ref={hiddenFileInput} hidden name="file" type="file" onChange={props.fileChange} />
+                </Grid>
+                <Grid container xs={12}>
+                    <SkillSelect />
+                </Grid>
+            
+                {/* </div> */}
+            </Grid>
             <Button className={classes.rightButton} onClick={props.handleSubmit} variant="contained" color="primary">Submit</Button>
         </React.Fragment>
 
