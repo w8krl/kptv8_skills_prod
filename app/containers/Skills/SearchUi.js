@@ -2,7 +2,6 @@ import React from "react";
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
-import ResultsTable from './SearchUiTable';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { MultiCheckboxFacet } from "@elastic/react-search-ui-views";
@@ -54,8 +53,6 @@ const config = {
 
 export default function App() {
 
-  const displayFields = getDisplayFields();
-  console.log(displayFields);
   return (
     <SearchProvider config={config}>
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
@@ -64,7 +61,7 @@ export default function App() {
             <div className="App">
               <ErrorBoundary>
                 <Layout
-                  header={<SearchBox autocompleteSuggestions={true} />}
+                  header={<SearchBox placeholder="Search resources..." autocompleteSuggestions={true} />}
                   sideContent={
                     <div>
                       {wasSearched && (

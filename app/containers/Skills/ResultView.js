@@ -17,12 +17,13 @@ const styles = {
     }
   };
 
-function handleChange(onClickLink){ console.log(onClickLink)}
 
 export default ({ result, onClickLink }) => (
 
   <li className="sui-result">
-    <div className="sui-result__header">
+    <div onClick={onClickLink} className="sui-result__header">
+
+    {/* <a class="sui-result__title sui-result__title-link" href="504" target="_blank" rel="noopener noreferrer">Naginbhai Patel</a>         */}
       <span
         className="sui-result__title"
         // Snippeted results contain search term highlights with html and are
@@ -70,6 +71,15 @@ export default ({ result, onClickLink }) => (
             }}
           />
         </li>
+        <li>
+          <span className="sui-result__key">Role</span>{" "}
+          <span
+            className="sui-result__value"
+            dangerouslySetInnerHTML={{
+              __html: result.role.snippet
+            }}
+          />
+        </li>
         {/* <li>
           <span className="sui-result__key">Critic Score</span>{" "}
           <span className="sui-result__value">{result.id.raw}</span>
@@ -91,7 +101,6 @@ export default ({ result, onClickLink }) => (
                         result.active_status.raw === "Active" ? styles.chipActive : styles.chipInactive}
                         className="sui-result__value"
                         label={result.active_status.raw}
-                        onClick={handleChange(onClickLink)}
                         size="small"
                         color="primary"
                     />
