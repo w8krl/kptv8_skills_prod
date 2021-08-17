@@ -18,18 +18,20 @@ const styles = {
   };
 
 
-export default ({ result, onClickLink }) => (
+export default ({ result, onClickLink,...rest }) => (
 
   <li className="sui-result">
     <div onClick={onClickLink} className="sui-result__header">
 
     {/* <a class="sui-result__title sui-result__title-link" href="504" target="_blank" rel="noopener noreferrer">Naginbhai Patel</a>         */}
-      <span
-        className="sui-result__title"
-        // Snippeted results contain search term highlights with html and are
-        // 100% safe and santitized, so we dangerously set them here
-        dangerouslySetInnerHTML={{ __html: result.name.snippet }}
+     <a className="sui-result__title-link" href={"people/" + result.id.raw}> 
+                <span
+                    className="sui-result__title"
+                    // Snippeted results contain search term highlights with html and are
+                    // 100% safe and santitized, so we dangerously set them here
+                    dangerouslySetInnerHTML={{ __html: result.name.snippet }}
       />
+      </a>
     </div>
     <div className="sui-result__body">
       <div

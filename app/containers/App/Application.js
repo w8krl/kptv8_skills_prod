@@ -26,7 +26,7 @@ function Application(props) {
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
         { /* Home */ }
-        <Route exact path="/app" component={BlankPage} />
+        <Route exact path="/app" component={ResourceSearch} />
         <Route path="/app/dashboard" component={DashboardPage} />
         <Route path="/app/form" component={Form} />
         <Route path="/app/table" component={Table} />
