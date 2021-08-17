@@ -2,6 +2,8 @@
   "engineName": "resource-search",
   "endpointBase": "http://192.168.20.128:3002",
   "searchKey": "search-6gxrfdvcqcjg9svmgymwihj6",
+  "titleField": "name",
+  "urlField": "id",
   "resultFields": [
     "country",
     "role",
@@ -17,7 +19,8 @@
     "region",
     "pri_rate",
     "empl_category",
-    "id"
+    "id",
+    "avatar"
   ],
   "sortFields": [
     "active_status",
@@ -29,5 +32,14 @@
     "pri_rate",
     "country",
     "active_status"
+  ],
+  "displayFields": [
+    "id",
+    "name",
+    "country",
+    "skills",
+    "role",
+    "service_desc",
+    "pri_rate"
   ]
 }

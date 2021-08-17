@@ -1,7 +1,12 @@
 import React from "react";
 import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
-
+import { DataGrid } from '@material-ui/data-grid';
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
+import ResultsTable from './SearchUiTable';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { MultiCheckboxFacet } from "@elastic/react-search-ui-views";
+import ResultView  from './ResultView';
 
 import {
   ErrorBoundary,
@@ -16,17 +21,17 @@ import {
   WithSearch
 } from "@elastic/react-search-ui";
 import { Layout } from "@elastic/react-search-ui-views";
-import styles from  "@elastic/react-search-ui-views/lib/styles/styles.css";
+import styles from "@elastic/react-search-ui-views/lib/styles/styles.css";
 
 
-console.log(styles)
 import {
   buildAutocompleteQueryConfig,
   buildFacetConfigFromConfig,
   buildSearchOptionsFromConfig,
   buildSortOptionsFromConfig,
   getConfig,
-  getFacetFields
+  getFacetFields,
+  getDisplayFields
 } from "./config/config-helper";
 
 const { hostIdentifier, searchKey, endpointBase, engineName } = getConfig();
@@ -46,12 +51,11 @@ const config = {
   alwaysSearchOnInitialLoad: true
 };
 
-const useStyles = makeStyles(theme => ({
 
-}));
+export default function App() {
 
-
-export default function App(props) {
+  const displayFields = getDisplayFields();
+  console.log(displayFields);
   return (
     <SearchProvider config={config}>
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
@@ -79,6 +83,7 @@ export default function App(props) {
                       titleField={getConfig().titleField}
                       urlField={getConfig().urlField}
                       shouldTrackClickThrough={true}
+                      resultView={ResultView}
                     />
                   }
                   bodyHeader={
