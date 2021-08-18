@@ -1,0 +1,45 @@
+{
+  "engineName": "resource-search",
+  "endpointBase": "http://192.168.20.128:3002",
+  "searchKey": "search-6gxrfdvcqcjg9svmgymwihj6",
+  "titleField": "name",
+  "urlField": "id",
+  "resultFields": [
+    "country",
+    "role",
+    "gender",
+    "commitment",
+    "skills_raw",
+    "skills",
+    "active_status",
+    "service_desc",
+    "rate_period",
+    "name",
+    "currency",
+    "region",
+    "pri_rate",
+    "empl_category",
+    "id",
+    "avatar"
+  ],
+  "sortFields": [
+    "active_status",
+    "pri_rate"
+  ],
+  "facets": [
+    "service_desc",
+    "skills",
+    "pri_rate",
+    "country",
+    "active_status"
+  ],
+  "displayFields": [
+    "id",
+    "name",
+    "country",
+    "skills",
+    "role",
+    "service_desc",
+    "pri_rate"
+  ]
+}

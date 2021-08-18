@@ -20,6 +20,13 @@ module.exports = [
         name: 'Resource Search',
         icon: 'account_box',
         link: '/app/resource-search'
+      
+      },
+      {
+        key: 'aaaa',
+        name: 'Profile Search',
+        icon: 'account_box',
+        link: '/app/profile'
       }
     ]
   },

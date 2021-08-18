@@ -1,4 +1,4 @@
-import { fade, lighten } from '@material-ui/core/styles/colorManipulator';
+import { alpha as fade, lighten } from '@material-ui/core/styles/colorManipulator';
 import flag from 'enl-images/flag-lang.png';
 const drawerWidth = 240;
 
