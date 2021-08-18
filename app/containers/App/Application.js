@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { PropTypes } from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Dashboard from '../Templates/Dashboard';
 import { AppContext } from './ThemeWrapper';
 import {
@@ -15,7 +15,8 @@ import {
   Matrix,
   CvList,
   NewEmpFrm,
-  ResList
+  ResList,
+  Profile
 } from '../pageListAsync';
 
 function Application(props) {
@@ -26,7 +27,10 @@ function Application(props) {
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
         { /* Home */ }
-        <Route exact path="/app" component={ResourceSearch} />
+        <Route exact path="/app" >
+          <Redirect to="/app/Resource-Search" />
+        </Route>
+        <Route path="/app/profile" component={Profile} />
         <Route path="/app/dashboard" component={DashboardPage} />
         <Route path="/app/form" component={Form} />
         <Route path="/app/table" component={Table} />

@@ -8,7 +8,7 @@ import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/styles';
 import {
   withTheme, withStyles,
-  createMuiTheme, MuiThemeProvider
+  createTheme as createMuiTheme, MuiThemeProvider
 } from '@material-ui/core/styles';
 import 'enl-styles/vendors/react-loading-bar/index.css';
 import { changeModeAction } from 'enl-redux/actions/uiActions';

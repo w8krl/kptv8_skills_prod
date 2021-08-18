@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha as fade } from '@material-ui/core/styles/colorManipulator';
 const styles = theme => ({
   root: {
     flexGrow: 1,

@@ -72,6 +72,10 @@ export const ResourceSearch = loadable(() =>
   import ('./Skills/SearchUi'), {
     fallback: <Loading />,
   });
+export const Profile = loadable(() =>
+  import ('./UserProfile'), {
+    fallback: <Loading />,
+  });
   export const Matrix = loadable(() =>
   import ('./Reports/Matrix'), {
     fallback: <Loading />,

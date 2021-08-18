@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha as fade } from '@material-ui/core/styles/colorManipulator';
 import cyan from '@material-ui/core/colors/cyan';
 import grey from '@material-ui/core/colors/blueGrey';
 import red from '@material-ui/core/colors/red';
