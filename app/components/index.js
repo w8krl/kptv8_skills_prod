@@ -74,3 +74,6 @@ export Cover from './Profile/Cover';
 export About from './Profile/About';
 export Albums from './Profile/Albums';
 export Connection from './Profile/Connection';
+
+//Skill Selector KW
+export SkillsTreeSelector from './Skills';

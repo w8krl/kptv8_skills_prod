@@ -84,6 +84,23 @@ app.post('/getRes', (req, res)=>{
 
 })
 
+app.post('/getSkills', (req, res)=>{
+
+    let sql = `SELECT d.domain, sd.sub_domain, ct.tag, ct.id FROM 
+    comp_domain d
+    LEFT JOIN comp_subdomain sd ON d.id = sd.parent_domain
+    LEFT JOIN comp_tags ct ON sd.id = ct.parent_subdomain`;
+
+    db.query(sql, (err, result) => {
+        if(err){
+            res.send(err);
+        } else {
+            res.send(result);
+        }
+    })
+
+})
+
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
   })

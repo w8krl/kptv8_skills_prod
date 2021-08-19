@@ -80,8 +80,8 @@ export const Profile = loadable(() =>
   import ('./Reports/Matrix'), {
     fallback: <Loading />,
   });  
-  export const NewEmpFrm = loadable(() =>
-  import ('./ResManagement/Forms/NewRes'), {
+  export const SkillSelector = loadable(() =>
+  import ('./ResManagement/Forms/SelectSkills'), {
     fallback: <Loading />,
   });  
   export const ResList = loadable(() =>
