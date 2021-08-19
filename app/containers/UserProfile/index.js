@@ -12,6 +12,9 @@ import SupervisorAccount from '@material-ui/icons/SupervisorAccount';
 import Favorite from '@material-ui/icons/Favorite';
 import PhotoLibrary from '@material-ui/icons/PhotoLibrary';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+
+
 import {
   Cover,
   About,
@@ -45,6 +48,7 @@ function UserProfile(props) {
     setValue(val);
   };
 
+    console.log(props);
   return (
     <div>
       <Helmet>
