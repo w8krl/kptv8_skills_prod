@@ -6,7 +6,8 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Axios from 'axios';
-import SkillSelect from '../AddSkills';
+import SkillsTreeSelector from 'enl-components/Skills';
+import AddSkills from '../AddSkills';
 
 const theme = createTheme({
     overrides: {
@@ -23,9 +24,19 @@ const theme = createTheme({
     },
 });
 
+
+// height: 18rem;
+// overflow-y: scroll;
+// border: solid 1px #ededed;
+// }
+
 const styles = theme => ({
+    root: {
+        flexGrow: 1,
+      },
     button: {
         margin: theme.spacing(1),
+        height: "2rem"
     },
     leftButton: {
         position: "absolute",
@@ -64,10 +75,23 @@ class MasterForm extends React.Component {
                 region: '',
                 comments: '',
                 management_co: '',
-                co_type: ''
-            },
+                co_type: '',
+                checkedData:[],
+            }
 
         }
+        this.childToParent = this.childToParent.bind(this);
+    }
+
+
+
+    childToParent(data) {
+        this.setState(prevState => ({
+            formData: {
+                ...prevState.formData,
+                checkedData: data
+            }
+        }))        
     }
 
     handleChange = event => {
@@ -102,7 +126,7 @@ class MasterForm extends React.Component {
 
     _next = () => {
         let currentStep = this.state.currentStep
-        currentStep = currentStep >= 2 ? 3 : currentStep + 1
+        currentStep = currentStep + 1
         this.setState({
             currentStep: currentStep
         })
@@ -135,7 +159,7 @@ class MasterForm extends React.Component {
 
     nextButton(props) {
         let currentStep = this.state.currentStep;
-        if (currentStep < 3) {
+        if (currentStep < 4) {
             return (
                 <Button
                     className={props.rightButton} color="secondary" variant="outlined"
@@ -178,6 +202,15 @@ class MasterForm extends React.Component {
                             management_co={this.state.formData.management_co}
                         />
                         <Step3
+                            currentStep={this.state.currentStep}
+                            fileChange={this.fileChange}
+                            fileName={this.state.fileName}
+                            classes={classes}
+                            handleSubmit={this.handleSubmit}
+                            childToParent={this.childToParent}
+                            checkedData={this.state.formData.checkedData}
+                        />
+                        <Step4
                             currentStep={this.state.currentStep}
                             fileChange={this.fileChange}
                             fileName={this.state.fileName}
@@ -239,22 +272,53 @@ function Step3(props) {
 
     return (
         <React.Fragment>
-            <Grid container alignItems="center">
-                <Grid container xs={12}>
+            <Grid container>
+                <Grid item xs={6}>
+
+                    <SkillsTreeSelector childToParent={props.childToParent} />
+
+
+                </Grid>
+                <Grid item xs={6}>
+                    <AddSkills checkedData={props.checkedData} />
+
+                </Grid>
+
+
+            </Grid>
+
+        </React.Fragment>
+
+    );
+}
+
+
+function Step4(props) {
+    if (props.currentStep !== 4) {
+        return null
+    }
+    const { classes } = props;
+    const hiddenFileInput = React.useRef(null);
+    const handleClick = event => {
+        hiddenFileInput.current.click();
+    };
+
+    return (
+        <React.Fragment>
+            <Grid container>
+                <Grid container md={6} xs={12}>
                     <Button variant="contained" onClick={handleClick} color="default" className={classes.button} startIcon={<CloudUploadIcon />}>Upload CV</Button>
                     <label htmlFor="file">{props.fileName}</label>
                     <input ref={hiddenFileInput} hidden name="file" type="file" onChange={props.fileChange} />
+
                 </Grid>
-                <Grid container xs={12}>
-                    <SkillSelect />
-                </Grid>
-            
-                {/* </div> */}
             </Grid>
             <Button className={classes.rightButton} onClick={props.handleSubmit} variant="contained" color="primary">Submit</Button>
         </React.Fragment>
 
     );
 }
+
+
 
 export default withStyles(styles, { withTheme: true })(MasterForm);

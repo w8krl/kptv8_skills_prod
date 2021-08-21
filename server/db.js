@@ -36,6 +36,14 @@ app.post('/newRes', (req, res)=>{
     const comments = req.body.comments;
     const management_co = req.body.management_co;
     const co_type = req.body.co_type;
+    const skills = req.body.checkedData;
+
+    let PROCESS_STATUS = {
+        id: '',
+        create: false,
+        upload: false,
+        skills_add: 0
+    };
 
     console.log(req.body);
 
@@ -61,15 +69,44 @@ app.post('/newRes', (req, res)=>{
                 if (err) {
                     res.send(err);
                 } else {
-
+                    PROCESS_STATUS.id =  result.insertId;
+                    PROCESS_STATUS.create = true;
+                    PROCESS_STATUS.upload = file_uploaded;
                     console.log("New resource processed successfully");
-                    res.send("New record added to DB, CV upload status: " + file_uploaded);
-
+                    skillsAdd(PROCESS_STATUS.id);
                 }
             }
         )
     }).catch(e => console.log(e));
-    
+
+    function skillsAdd(id) {
+        if (skills.length > 0) {
+            let skillsArr = skills.split(",");
+            console.log(skillsArr);
+
+            let sql = 'INSERT INTO `res_mgr`.`comp_tag_data` (`res_id`, `comp_tag_id`) VALUES ';
+
+            skillsArr.map(
+                i => sql += "('" + id + "', '" + i + "'),"
+            )
+            sql = sql.replace(/,\s*$/, "");
+
+            db.query(sql,
+                (err, result) => {
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        PROCESS_STATUS.skills_add = result.affectedRows;
+                        console.log("New skills added");
+                    }
+                }
+            )
+
+
+            console.log(sql);
+        }
+        // res.send(PROCESS_STATUS);
+    }
 })
 
 app.post('/getRes', (req, res)=>{
@@ -83,23 +120,47 @@ app.post('/getRes', (req, res)=>{
     })
 
 })
-
 app.post('/getSkills', (req, res)=>{
 
-    let sql = `SELECT d.domain, sd.sub_domain, ct.tag, ct.id FROM 
-    comp_domain d
-    LEFT JOIN comp_subdomain sd ON d.id = sd.parent_domain
-    LEFT JOIN comp_tags ct ON sd.id = ct.parent_subdomain`;
+    let sql = `SELECT "root" AS label, 1 AS value, NULL AS parent UNION
+    SELECT cd.domain AS item, cd.id + 1000 AS id, 1 AS parent
+    FROM comp_domain cd
+    JOIN comp_subdomain sd ON cd.id = sd.parent_domain UNION
+    SELECT sd.sub_domain AS item, sd.id + 2000 AS id, parent_domain + 1000 AS parent
+    FROM comp_subdomain sd
+    JOIN comp_tags ct1 ON sd.id = ct1.parent_subdomain UNION
+    SELECT tag AS item, id + 3000 AS id, parent_subdomain + 2000 AS parent
+    FROM comp_tags
+     `;
+
+    function tree(data) {
+        const idMapping = data.reduce((acc, el, i) => {
+            acc[el.value] = i;
+            return acc;
+        }, {});
+
+        let root;
+        data.forEach(el => {
+            if (el.parent === null) {
+                root = el;
+                return;
+            }
+            const parentEl = data[idMapping[el.parent]]; console.log(parentEl);
+            parentEl.children = [...(parentEl.children || []), el];
+        });
+        return root;
+    }
 
     db.query(sql, (err, result) => {
         if(err){
             res.send(err);
         } else {
-            res.send(result);
+            res.send(tree(result));
         }
     })
 
 })
+
 
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
