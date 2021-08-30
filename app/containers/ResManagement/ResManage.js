@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useEffect } from "react";
 import ResList from './ResList';
 
-import NewResModal from '../Modals/NewResModal';
+import ResActions from '../Modals/ResActions';
 
 export default function ResManage() {
   return (
     <div>
-      <NewResModal />
+      <ResActions />
       <ResList />
     </div>
   );

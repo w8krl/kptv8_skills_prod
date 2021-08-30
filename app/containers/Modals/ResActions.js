@@ -9,7 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import NewRes from '../ResManagement/Forms/NewRes';
 import MultiStepFrm from '../ResManagement/Forms/AddResMultiStep';
 import { withStyles } from '@material-ui/core/styles';
-import StyledNotif from 'enl-components/Notification/StyledNotif'
+import StyledNotif from 'enl-components/Notification/StyledNotif';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const styles = theme => ({
@@ -31,8 +33,19 @@ const styles = theme => ({
     }
   });
 
+  const notiDispatch = (res) => {
+      console.log(res);
+    // example { id: 792, create: true, upload: false, skills_add: 0 }
+    // (res.create) ? toast.success("Resource Added", notiOptions): '';
+    (res.skills_add) > 0 ? toast.success( res.skills_add + " skills added to DB.", notiOptions) : '';
 
-class NewResModal extends React.Component {
+  }
+
+const notiOptions = {
+    position: toast.POSITION.BOTTOM_RIGHT
+}
+
+class ResActions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,13 +68,21 @@ class NewResModal extends React.Component {
     };
 
     handleModalSubmit = (resp) => {
-        if (resp.create) {
+        if (resp.id) {
             this.setState({
                 open: false
             })
         }
+        notiDispatch(resp);
+    
         
     };
+
+
+    
+
+    
+
 
     render() {
         const { classes } = this.props;
@@ -72,9 +93,9 @@ class NewResModal extends React.Component {
                 <Button className={classes.resModalButton} variant="outlined" color="primary" onClick={this.handleClickOpen}>
                     Add Resource
                 </Button>
-                <Button className={classes.resModalButton} variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                {/* <Button className={classes.resModalButton} variant="outlined" color="primary" onClick={notify}>
                     Modify Resource
-                </Button>                
+                </Button>                 */}
                 <Dialog classes={{ paper: classes.paperScrollPaper }} open={this.state.open} maxWidth="sm" onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add New Resource 🧙‍♂️
 
@@ -90,9 +111,10 @@ class NewResModal extends React.Component {
                     </DialogActions>
                 </Dialog>
                     {/* Resource will be added to the database. CVs will be automatically indexed and analysed for core skills. */}
+                    <ToastContainer />
             </div>
         )
 
     }
 }
-export default withStyles(styles)(NewResModal);
+export default withStyles(styles)(ResActions);
