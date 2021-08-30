@@ -23,93 +23,114 @@ const db = mysql.createConnection({
 })
 
 
-app.post('/newRes', (req, res)=>{
+createUser = (body) =>{
+    const {
+        name,
+        email,
+        title,
+        pri_contact_no,
+        sec_contact_no,
+        contract_type,
+        country,
+        region,
+        comments,
+        management_co,
+        co_type
+    } = body;
 
-    const name = req.body.name;
-    const email = req.body.email;
-    const title = req.body.title;
-    const pri_contact_no = req.body.pri_contact_no;
-    const sec_contact_no = req.body.sec_contact_no;
-    const contract_type = req.body.contract_type;
-    const country = req.body.country;
-    const region = req.body.region;
-    const comments = req.body.comments;
-    const management_co = req.body.management_co;
-    const co_type = req.body.co_type;
-    const skills = req.body.checkedData;
+    return new Promise((resolve, reject)=>{
+        let status = { action : "Create Resource", process_status: "info", resp_text: '' };
 
-    let PROCESS_STATUS = {
-        id: '',
-        create: false,
-        upload: false,
-        skills_add: 0
-    };
-
-    console.log(req.body);
-
-    let file_uploaded = false;
-    let cv_path = '';
-    let fName = false;
-
-
-    async function processFiles() {
-        if (req.files !== null) {
-            let uplFile = req.files.file;
-            fName = uplFile.name.replace(/\s/g, '_');
-            let uploadPath = __dirname + '/uploads/cv_data/' + fName;
-            cv_path = fName;
-            await uplFile.mv(uploadPath);
-        }
-    }
-    processFiles().then(() => {
-        db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type, cv_path) values (?,?,?,?,?,?,?,?,?,?,?,?)',
-            [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type, cv_path],
-
-            (err, result) => {
-                if (err) {
-                    res.send(err);
-                } else {
-                    PROCESS_STATUS.id =  result.insertId;
-                    PROCESS_STATUS.create = true;
-                    PROCESS_STATUS.upload = file_uploaded;
-                    console.log("New resource processed successfully");
-                    skillsAdd(PROCESS_STATUS);
-                }
+        db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type) values (?,?,?,?,?,?,?,?,?,?,?)',
+            [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type],  (error, results)=>{
+            if(error){
+                return reject(error);
             }
-        )
-    }).catch(e => console.log(e));
+            status.process_status = "success";
+            status.resp_text = "Resource Created"
+            status.id = results.insertId;
+            return resolve(status);
+        });
+    });
+};
 
-    function skillsAdd(PROCESS_STATUS) {
-        let id = PROCESS_STATUS.id;
-        if (skills.length > 0) {
-            let skillsArr = skills.split(",");
-            console.log(skillsArr);
 
+createSkills = (id, skillData) => {
+
+    return new Promise((resolve, reject) => {
+        let status = { action : "Add Skills", process_status: "info", resp_text: '' };
+        if (skillData.length > 0) {
+            let skillsArr = skillData.split(",");
             let sql = 'INSERT INTO `res_mgr`.`comp_tag_data` (`res_id`, `comp_tag_id`) VALUES ';
-
             skillsArr.map(
-                i => sql += "('" + id + "', '" + (i-3000) + "'),"
+                i => sql += "('" + id + "', '" + (i - 3000) + "'),"
             )
             sql = sql.replace(/,\s*$/, "");
-
-            db.query(sql,
-                (err, result) => {
-                    if (err) {
-                        res.send(err);
-                    } else {
-                        PROCESS_STATUS.skills_add = result.affectedRows;
-                        console.log(PROCESS_STATUS.skills_add + "New skills added");
-                    }
+            db.query(sql, (error, results) => {
+                if (error) {
+                    return reject(error);
                 }
-            )
-
-
-            console.log(sql);
+                status.resp_text = `${results.affectedRows} skills added`;
+                status.process_status = "success"
+                return resolve(status);
+            });
+        } else {
+            status.resp_text = 'No skills added, you can add them later';
+            return resolve(status);
         }
-        res.send(PROCESS_STATUS);
-        console.log(PROCESS_STATUS);
+
+    });
+}
+
+processFiles = (id, files) =>{
+    
+    return new Promise((resolve, reject) => {
+
+        let status = { action : "CV Upload", process_status: "info", resp_text: 'No Files to upload' };
+
+        if (files === null) {
+            return resolve(status);
+        }
+
+        let cv_path = '';
+        let fName = false;
+
+        let uplFile = files.file;
+        fName = uplFile.name.replace(/\s/g, '_');
+        let uploadPath = __dirname + '/uploads/cv_data/' + fName;
+        cv_path = fName;
+        let sql = `update res set cv_path = '${cv_path}' where id = ${id}`;
+        
+        if (uplFile.mv(uploadPath)) {
+            status.uploaded = true;
+            db.query(sql,  (error, res)=>{
+                if(error){
+                    return reject(error);
+                }
+                status.resp_text = `File uploaded.`;
+                status.process_status = "success";
+                return resolve(status);
+            });
+        } else { 
+            status.resp_text = "Unable to upload file";
+            return reject(status); 
+        }
+
+
+    });
+};
+
+app.post('/newRes', async (req, res, next)=>{
+    
+    try {
+        const user = await createUser(req.body);
+        const skills = await createSkills(user.id, req.body.checkedData);
+        const uploaded = await processFiles(user.id, req.files);
+        res.status(200).json([user, skills, uploaded]);
+    } catch(e) {
+        res.sendStatus(500);
     }
-})
+});
 
 app.post('/getRes', (req, res)=>{
 
@@ -122,6 +143,7 @@ app.post('/getRes', (req, res)=>{
     })
 
 })
+
 app.post('/getSkills', (req, res)=>{
 
     let sql = `SELECT "root" AS label, 1 AS value, NULL AS parent UNION

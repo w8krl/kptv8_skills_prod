@@ -121,9 +121,9 @@ class MultiStepFrm extends React.Component {
 
         Axios.post('http://localhost:8888/newRes', form_data)
             .then((response) => {
-                this.props.handleModalSubmit(response.data);
-
-            });
+                this.props.handleModalSubmit(response);
+            })
+            .catch(e=> {console.log(e)})
     };
 
 

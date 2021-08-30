@@ -179,6 +179,7 @@
     "react-swipeable-views": "^0.14.0-alpha.0",
     "react-syntax-highlighter": "^7.0.0",
     "react-text-mask": "^5.3.2",
+    "react-toastify": "^8.0.1",
     "react-top-loading-bar": "^1.2.0",
     "recharts": "^2.0.0",
     "recompose": "^0.28.2",
