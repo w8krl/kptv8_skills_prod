@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Axios from 'axios';
 import SkillsTreeSelector from 'enl-components/Skills';
 import AddSkills from '../AddSkills';
+import Typography from '@material-ui/core/Typography';
 
 const theme = createTheme({
     overrides: {
@@ -57,7 +58,7 @@ const styles = theme => ({
     }
 });
 
-class MasterForm extends React.Component {
+class MultiStepFrm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -119,10 +120,12 @@ class MasterForm extends React.Component {
         form_data.append("fileName", this.state.fileName);
 
         Axios.post('http://localhost:8888/newRes', form_data)
-            .then(function (response) {
-                console.log(response.data);
-            })
+            .then((response) => {
+                this.props.handleModalSubmit(response.data);
+
+            });
     };
+
 
     _next = () => {
         let currentStep = this.state.currentStep
@@ -179,7 +182,7 @@ class MasterForm extends React.Component {
                 <React.Fragment>
                     {/* <h1>New Resource Wizard</h1> */}
                     <p>Step {this.state.currentStep} </p>
-                    <form onSubmit={this.popUp}>
+                    <form>
 
                         <Step1
                             currentStep={this.state.currentStep}
@@ -269,19 +272,16 @@ function Step3(props) {
     const handleClick = event => {
         hiddenFileInput.current.click();
     };
-
+    const skillsSelected = props.checkedData.length;
     return (
         <React.Fragment>
             <Grid container>
                 <Grid item xs={6}>
-
                     <SkillsTreeSelector childToParent={props.childToParent} />
-
-
                 </Grid>
                 <Grid item xs={6}>
+                    {skillsSelected > 0 && <Typography variant="h6">Total SKills Selected: {skillsSelected}</Typography>}
                     <AddSkills checkedData={props.checkedData} />
-
                 </Grid>
 
 
@@ -306,7 +306,7 @@ function Step4(props) {
     return (
         <React.Fragment>
             <Grid container>
-                <Grid container md={6} xs={12}>
+                <Grid item md={6} xs={12}>
                     <Button variant="contained" onClick={handleClick} color="default" className={classes.button} startIcon={<CloudUploadIcon />}>Upload CV</Button>
                     <label htmlFor="file">{props.fileName}</label>
                     <input ref={hiddenFileInput} hidden name="file" type="file" onChange={props.fileChange} />
@@ -321,4 +321,4 @@ function Step4(props) {
 
 
 
-export default withStyles(styles, { withTheme: true })(MasterForm);
+export default withStyles(styles, { withTheme: true })(MultiStepFrm);

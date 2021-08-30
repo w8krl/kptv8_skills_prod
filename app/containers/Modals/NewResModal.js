@@ -9,10 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import NewRes from '../ResManagement/Forms/NewRes';
 import MultiStepFrm from '../ResManagement/Forms/AddResMultiStep';
 import { withStyles } from '@material-ui/core/styles';
+import StyledNotif from 'enl-components/Notification/StyledNotif'
 
-// Test
-
-// Test123
 
 const styles = theme => ({
     large: {
@@ -38,8 +36,10 @@ class NewResModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            showNoti:false
         };
+        this.handleModalSubmit = this.handleModalSubmit.bind(this);
     }
 
     handleClickOpen = () => {
@@ -54,19 +54,19 @@ class NewResModal extends React.Component {
         })
     };
 
-    handleSubmit = () => {
-        this.setState({
-            open: false
-        })
-    };
-    
-
-    popUp = () => {
-alert("test")
+    handleModalSubmit = (resp) => {
+        if (resp.create) {
+            this.setState({
+                open: false
+            })
+        }
+        
     };
 
     render() {
         const { classes } = this.props;
+
+        
         return (
             <div>
                 <Button className={classes.resModalButton} variant="outlined" color="primary" onClick={this.handleClickOpen}>
@@ -83,7 +83,7 @@ alert("test")
                         </Button>
                     </DialogTitle>
                     <DialogContent>
-                        <MultiStepFrm popUp={this.popUp} handleSubmit={this.handleSubmit}></MultiStepFrm>
+                        <MultiStepFrm handleModalSubmit={this.handleModalSubmit} ></MultiStepFrm>
                     </DialogContent>
                     <DialogActions>
                         

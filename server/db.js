@@ -73,13 +73,14 @@ app.post('/newRes', (req, res)=>{
                     PROCESS_STATUS.create = true;
                     PROCESS_STATUS.upload = file_uploaded;
                     console.log("New resource processed successfully");
-                    skillsAdd(PROCESS_STATUS.id);
+                    skillsAdd(PROCESS_STATUS);
                 }
             }
         )
     }).catch(e => console.log(e));
 
-    function skillsAdd(id) {
+    function skillsAdd(PROCESS_STATUS) {
+        let id = PROCESS_STATUS.id;
         if (skills.length > 0) {
             let skillsArr = skills.split(",");
             console.log(skillsArr);
@@ -87,7 +88,7 @@ app.post('/newRes', (req, res)=>{
             let sql = 'INSERT INTO `res_mgr`.`comp_tag_data` (`res_id`, `comp_tag_id`) VALUES ';
 
             skillsArr.map(
-                i => sql += "('" + id + "', '" + i + "'),"
+                i => sql += "('" + id + "', '" + (i-3000) + "'),"
             )
             sql = sql.replace(/,\s*$/, "");
 
@@ -97,7 +98,7 @@ app.post('/newRes', (req, res)=>{
                         res.send(err);
                     } else {
                         PROCESS_STATUS.skills_add = result.affectedRows;
-                        console.log("New skills added");
+                        console.log(PROCESS_STATUS.skills_add + "New skills added");
                     }
                 }
             )
@@ -105,7 +106,8 @@ app.post('/newRes', (req, res)=>{
 
             console.log(sql);
         }
-        // res.send(PROCESS_STATUS);
+        res.send(PROCESS_STATUS);
+        console.log(PROCESS_STATUS);
     }
 })
 
