@@ -42,7 +42,7 @@ module.exports = [
       },
       {
         key: 'not_found_page',
-        name: 'Add New Resource',
+        name: 'TESTING',
         icon: 'account_box',
         link: '/app/add-resource'
       },

@@ -1,64 +1,45 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Chip from "@material-ui/core/Chip";
-import TextField from "@material-ui/core/TextField";
-import { useState } from "react";
-import Button from "@material-ui/core/Button";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
+import DoneIcon from '@material-ui/icons/Done';
 
-export default function OutlinedChips() {
-  const [hashtag, setHashtag] = useState("");
-  const [numberOfHashtags, setNumberOfHashtags] = useState(0);
-  const [arrayOfHashtags, addHashtag] = useState([]);
-  const handleDelete = (h) => () => {
-    addHashtag((arrayOfHashtags) =>
-      arrayOfHashtags.filter((hashtag) => hashtag !== h)
-    );
-  };
-  const handleHashtagChange = (event) => setHashtag(event.target.value);
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+  },
+}));
 
-  const handleEnterButton = (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault()
-      newHashtag();
-      setHashtag("");
-    }
+
+
+export default function AddSkills(props) {
+  const classes = useStyles();
+
+  console.log(props);
+
+  const handleDelete = () => {
+    console.info('You clicked the delete icon.');
   };
 
-  const newHashtag = () => {
-    if (numberOfHashtags < 10) {
-      setNumberOfHashtags(numberOfHashtags + 1);
-      addHashtag((arrayOfHashtags) => arrayOfHashtags.concat(hashtag.trim()));
-    } else {
-      console.log("Too much hashtags");
-    }
+  const handleClick = () => {
+    console.info('You clicked the Chip.');
   };
-  const Hashtags = arrayOfHashtags.map((h) => (
-    <Chip
-      size="large"
-      avatar={<Avatar>#</Avatar>}
-      label={h}
-      onDelete={handleDelete(h)}
-    />
-  ));
-  console.log(arrayOfHashtags);
+
+
+  const skills = props.checkedData.map((item) =>
+  <Chip label={item} color="secondary" />);
+
   return (
-    <div>
-      <TextField
-        size="small"
-        inputProps={{
-          style: { fontSize: 15 }
-        }}
-        fullWidth
-        id="outlined-multiline-static"
-        rows={1}
-        placeholder="Key Skills"
-        variant="outlined"
-        value={hashtag}
-        onChange={handleHashtagChange}
-        onKeyPress={handleEnterButton}
-      />
-
-      {numberOfHashtags > 0 ? Hashtags : ""}
+    <div className={classes.root}>
+      {skills}
+  
+      
     </div>
   );
 }

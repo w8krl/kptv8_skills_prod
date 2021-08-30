@@ -1,14 +1,10 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Chip from '@material-ui/core/Chip';
-import MUIDataTable from 'mui-datatables';
+import { useHistory } from "react-router-dom";
 import axios from "axios";
-
-
 import { DataGrid, GridToolbarContainer,
   GridToolbarExport} from '@material-ui/data-grid';
+
+
 
   function CustomToolbar() {
     return (
@@ -46,63 +42,69 @@ const columns = [
     field: 'name',
     name: 'name',
     headerName: 'Name',
-    description: 'This column has a value getter and is not sortable.',
+    description: 'User name',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'gender',
     name: 'gender',
     headerName: 'Gender',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'pri_contact_no',
     name: 'pri_contact_no',
     headerName: 'Contact',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'role',
     name: 'role',
     headerName: 'Role',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'service_desc',
     name: 'service_desc',
     headerName: 'Service',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'country',
     name: 'country',
     headerName: 'Country',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'region',
     name: 'region',
     headerName: 'Region',
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: 'email',
     name: 'Email',
     headerName: 'Email',
     width: 150,
-    editable: true,
+    editable: false,
   },
 ];
 
 function handleCellEditCommit(e){
   window.confirm("Are you sure?");
+}
+
+function handleCellClick(e){
+  const history = useHistory();
+  const navigateTo = () => history.push('/app/profile');//eg.history.push('/login');
+
 }
 
 export default function DataTable() {
@@ -130,6 +132,8 @@ export default function DataTable() {
     }
   }, []);
 
+
+
   return (
     <div style={{ height: 700, width: '100%' }}>
       <DataGrid
@@ -139,6 +143,7 @@ export default function DataTable() {
         checkboxSelection
         onCellEditCommit={handleCellEditCommit}
         disableSelectionOnClick
+        onRowClick={handleCellClick}
         components={{
           Toolbar: CustomToolbar,
         }}
