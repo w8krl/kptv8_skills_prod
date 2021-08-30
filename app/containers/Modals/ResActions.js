@@ -33,16 +33,20 @@ const styles = theme => ({
     }
   });
 
-  const notiDispatch = (res) => {
-      console.log(res);
-    // example { id: 792, create: true, upload: false, skills_add: 0 }
-    // (res.create) ? toast.success("Resource Added", notiOptions): '';
-    (res.skills_add) > 0 ? toast.success( res.skills_add + " skills added to DB.", notiOptions) : '';
+const notiDispatch = (res) => {
+    let {data} = res;
+    let delay = 1000;
+    if (data.length > 0){
+        return (data.map((k,v) =>
+            toast[k.process_status](k.resp_text, { ...notiOptions, ...{ delay: delay * (v + 1) } })
+        ))
+    }
 
-  }
+}
 
-const notiOptions = {
-    position: toast.POSITION.BOTTOM_RIGHT
+let notiOptions = {
+    position: toast.POSITION.BOTTOM_RIGHT,
+    delay: 1000
 }
 
 class ResActions extends React.Component {
@@ -68,21 +72,13 @@ class ResActions extends React.Component {
     };
 
     handleModalSubmit = (resp) => {
-        if (resp.id) {
+        if (resp.data.length > 0) {
             this.setState({
                 open: false
             })
         }
         notiDispatch(resp);
-    
-        
     };
-
-
-    
-
-    
-
 
     render() {
         const { classes } = this.props;
@@ -98,7 +94,6 @@ class ResActions extends React.Component {
                 </Button>                 */}
                 <Dialog classes={{ paper: classes.paperScrollPaper }} open={this.state.open} maxWidth="sm" onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add New Resource 🧙‍♂️
-
                         <Button className={classes.closeButton} onClick={this.handleClose} color="primary">
                             Close X
                         </Button>

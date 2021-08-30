@@ -23,9 +23,6 @@ const db = mysql.createConnection({
 })
 
 
-
-
-
 createUser = (body) =>{
     const {
         name,
@@ -42,48 +39,58 @@ createUser = (body) =>{
     } = body;
 
     return new Promise((resolve, reject)=>{
+        let status = { action : "Create Resource", process_status: "info", resp_text: '' };
+
         db.query('insert into res (name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type) values (?,?,?,?,?,?,?,?,?,?,?)',
             [name, email, title, pri_contact_no, sec_contact_no, contract_type, country, region, comments, management_co, co_type],  (error, results)=>{
             if(error){
                 return reject(error);
             }
-            return resolve(results.insertId);
+            status.process_status = "success";
+            status.resp_text = "Resource Created"
+            status.id = results.insertId;
+            return resolve(status);
         });
     });
 };
 
 
-createSkills = (id,skillData) =>{
+createSkills = (id, skillData) => {
 
-    if (skillData.length > 0) {
-        let skillsArr = skillData.split(",");
-        let sql = 'INSERT INTO `res_mgr`.`comp_tag_data` (`res_id`, `comp_tag_id`) VALUES ';
-        skillsArr.map(
-            i => sql += "('" + id + "', '" + (i-3000) + "'),"
-        )
-        sql = sql.replace(/,\s*$/, "");
-
-        return new Promise((resolve, reject)=>{
-            db.query(sql,  (error, results)=>{
-                if(error){
+    return new Promise((resolve, reject) => {
+        let status = { action : "Add Skills", process_status: "info", resp_text: '' };
+        if (skillData.length > 0) {
+            let skillsArr = skillData.split(",");
+            let sql = 'INSERT INTO `res_mgr`.`comp_tag_data` (`res_id`, `comp_tag_id`) VALUES ';
+            skillsArr.map(
+                i => sql += "('" + id + "', '" + (i - 3000) + "'),"
+            )
+            sql = sql.replace(/,\s*$/, "");
+            db.query(sql, (error, results) => {
+                if (error) {
                     return reject(error);
                 }
-                return resolve(results.affectedRows);
+                status.resp_text = `${results.affectedRows} skills added`;
+                status.process_status = "success"
+                return resolve(status);
             });
-        });
-    }
+        } else {
+            status.resp_text = 'No skills added, you can add them later';
+            return resolve(status);
+        }
 
+    });
 }
 
 processFiles = (id, files) =>{
     
     return new Promise((resolve, reject) => {
 
-        if (files === null) {
-            return resolve("No Files to upload");
-        }
+        let status = { action : "CV Upload", process_status: "info", resp_text: 'No Files to upload' };
 
-        let status = { uploaded: false, db_updated: false };
+        if (files === null) {
+            return resolve(status);
+        }
 
         let cv_path = '';
         let fName = false;
@@ -100,11 +107,12 @@ processFiles = (id, files) =>{
                 if(error){
                     return reject(error);
                 }
-                status.db_updated = res.affectedRows;
+                status.resp_text = `File uploaded.`;
+                status.process_status = "success";
                 return resolve(status);
             });
         } else { 
-            status.response = "Unable to upload file";
+            status.resp_text = "Unable to upload file";
             return reject(status); 
         }
 
@@ -115,12 +123,11 @@ processFiles = (id, files) =>{
 app.post('/newRes', async (req, res, next)=>{
     
     try {
-        const id = await createUser(req.body);
-        const skills = await createSkills(id, req.body.checkedData);
-        const uploaded = await processFiles(id, req.files);
-        res.status(200).json({ id: id, upload: uploaded, skills_add: skills }); // send a json response
+        const user = await createUser(req.body);
+        const skills = await createSkills(user.id, req.body.checkedData);
+        const uploaded = await processFiles(user.id, req.files);
+        res.status(200).json([user, skills, uploaded]);
     } catch(e) {
-        console.log(e); // console log the error so we can see it in the console
         res.sendStatus(500);
     }
 });

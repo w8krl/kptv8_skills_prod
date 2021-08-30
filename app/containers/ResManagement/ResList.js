@@ -1,8 +1,12 @@
 import React, { useMemo, useState, useEffect } from "react";
+import {withRouter} from 'react-router';
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { Profile}  from '../pageListAsync';
+
 import { DataGrid, GridToolbarContainer,
   GridToolbarExport} from '@material-ui/data-grid';
+
 
 
 
@@ -101,17 +105,14 @@ function handleCellEditCommit(e){
   window.confirm("Are you sure?");
 }
 
-function handleCellClick(e){
-  const history = useHistory();
-  const navigateTo = () => history.push('/app/profile');//eg.history.push('/login');
-
+function handleCellClick(e) {
+  // let target = `/app/profile/${e.id}`;
+  // return <Redirect to={target}/>
 }
 
 export default function DataTable() {
 
   const [loadingData, setLoadingData] = useState(true);
- 
-
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -143,7 +144,7 @@ export default function DataTable() {
         checkboxSelection
         onCellEditCommit={handleCellEditCommit}
         disableSelectionOnClick
-        onRowClick={handleCellClick}
+        onRowClick={(handleCellClick)}
         components={{
           Toolbar: CustomToolbar,
         }}
