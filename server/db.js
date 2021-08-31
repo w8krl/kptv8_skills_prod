@@ -186,6 +186,48 @@ app.post('/getSkills', (req, res)=>{
 })
 
 
+
+getProfile = (id) =>{
+
+    return new Promise((resolve, reject)=>{
+            console.log("id = " + id);
+        db.query('select * from res where id=? limit 1',
+            [id],  (error, results)=>{
+            if(error){
+                return reject(error);
+            }
+            return resolve(results);
+        });
+    });
+};
+
+getAssignments = (id) =>{
+
+    return new Promise((resolve, reject) => {
+        console.log("id = " + id);
+        db.query('SELECT CONCAT( left(MONTHNAME(start),3) , " \'",right(YEAR(`start`), 2)) AS `time`, title, `desc`  fROM res_assignments WHERE id_res = ? order by 1 desc',
+            [id], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+
+app.post('/userProfile', async (req, res, next)=>{
+
+    try {
+        const profile = await getProfile(req.body.id);
+        const assign = await getAssignments(req.body.id);
+        res.status(200).json({profile: profile[0], assignments : assign});
+    } catch(e) {
+        res.sendStatus(500);
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
   })

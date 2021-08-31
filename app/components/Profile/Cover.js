@@ -41,6 +41,7 @@ function Cover(props) {
     name,
     desc,
     coverImg,
+    active
   } = props;
 
   return (
@@ -87,7 +88,8 @@ function Cover(props) {
           {desc}
         </Typography>
         <Button className={classes.button} size="large" variant="contained" color="secondary">
-          <FormattedMessage {...messages.add_to_connection} />
+          
+          {active}
         </Button>
       </div>
     </div>

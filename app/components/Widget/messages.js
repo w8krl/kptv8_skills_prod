@@ -270,11 +270,11 @@ export default defineMessages({
   },
   about_title: {
     id: `${scope}.about.title`,
-    defaultMessage: 'About Me',
+    defaultMessage: 'About',
   },
   born: {
     id: `${scope}.about.born`,
-    defaultMessage: 'Born',
+    defaultMessage: 'Birthday',
   },
   phone: {
     id: `${scope}.about.phone`,

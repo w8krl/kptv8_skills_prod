@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
@@ -13,6 +13,8 @@ import Favorite from '@material-ui/icons/Favorite';
 import PhotoLibrary from '@material-ui/icons/PhotoLibrary';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import Axios from 'axios';
+import { ProfileWidget } from 'enl-components';
 
 
 import {
@@ -26,6 +28,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import messages from 'enl-components/Profile/messages';
 
 function TabContainer(props) {
+  console.log(props);
   const { children } = props;
   return (
     <div style={{ paddingTop: 8 * 3 }}>
@@ -48,7 +51,37 @@ function UserProfile(props) {
     setValue(val);
   };
 
-    console.log(props);
+  //To allow shareable links
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let userId = params.get('user');
+
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [profData, setProfData] = useState([]);
+  const [assignData, setAssignData] = useState([]);
+
+  
+
+  useEffect(() => {
+    async function getData() {
+      await Axios
+        .post("http://localhost:8888/userProfile", { id: userId })
+        .then((response) => {
+          setProfData(response.data.profile);
+          setAssignData(response.data.assignments);
+          console.log(response.data.assignments);
+          setLoadingData(false);
+        });
+    }
+    if (loadingData) {
+      // if the result is not ready so you make the axios call
+      getData();
+    }
+  }, []);
+
+
+
   return (
     <div>
       <Helmet>
@@ -61,9 +94,10 @@ function UserProfile(props) {
       </Helmet>
       <Cover
         coverImg="/images/avatars/pp_boy4.jpg"
-        avatar={dummy.user.avatar}
-        name={dummy.user.name}
-        desc="Consectetur adipiscing elit."
+        avatar={profData.avatar}
+        name={profData.name}
+        desc={profData.role}
+        active={profData.active_status}
       />
       <AppBar position="static" className={classes.profileTab}>
         <Hidden mdUp>
@@ -90,14 +124,14 @@ function UserProfile(props) {
             textColor="primary"
             centered
           >
-            {/* <Tab icon={<AccountCircle />} label={intl.formatMessage(messages.about)} />
-            <Tab icon={<SupervisorAccount />} label={'20 ' + intl.formatMessage(messages.connections)} />
+            <Tab icon={<AccountCircle />} label={intl.formatMessage(messages.about)} />
+            {/* <Tab icon={<SupervisorAccount />} label={'20 ' + intl.formatMessage(messages.connections)} />
             <Tab icon={<PhotoLibrary />} label={'4 ' + intl.formatMessage(messages.albums)} /> */}
           </Tabs>
         </Hidden>
       </AppBar>
-      {/* {value === 0 && <TabContainer><About /></TabContainer>}
-      {value === 1 && <TabContainer><Connection /></TabContainer>}
+      {value === 0 && <TabContainer><About assignments={assignData} /></TabContainer>}
+      {/* {value === 1 && <TabContainer><Connection /></TabContainer>}
       {value === 2 && <TabContainer><Albums /></TabContainer>} */}
     </div>
   );

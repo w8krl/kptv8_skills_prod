@@ -44,12 +44,12 @@ const dataTimeline = [
 ];
 
 function TimelineWidget(props) {
-  const { classes, intl } = props;
+  const { classes, intl, timelineData } = props;
   return (
     <PapperBlock whiteBg noMargin title={intl.formatMessage(messages.activity_title)} icon="av_timer" desc="">
       <div className={classes.activityWrap}>
         <List>
-          {dataTimeline.map((item, index) => (
+          {timelineData.map((item, index) => (
             <ListItem key={index.toString()} className={classes.activityList}>
               <ListItemIcon>
                 <div className={classes.timeDot}>

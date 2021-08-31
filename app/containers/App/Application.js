@@ -30,7 +30,7 @@ function Application(props) {
         <Route exact path="/app" >
           <Redirect to="/app/Resource-Search" />
         </Route>
-        <Route path="/app/profile" component={Profile} />
+        <Route path="/app/User-Settings" component={Profile} />
         <Route path="/app/dashboard" component={DashboardPage} />
         <Route path="/app/form" component={Form} />
         <Route path="/app/table" component={Table} />

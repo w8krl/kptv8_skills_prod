@@ -31,7 +31,7 @@ import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
 
 function About(props) {
-  const { classes, intl, assignments } = props;
+  const { classes, intl } = props;
   return (
     <Grid
       container
@@ -42,11 +42,15 @@ function About(props) {
     >
       <Grid item md={6} xs={12}>
         {/* About Me */}
-        <ProfileWidget name="test" />
+        <ProfileWidget />
         <Divider className={classes.divider} />
-        <TimelineWidget timelineData={props.assignments} />
+        <TimelineWidget />
         <Divider className={classes.divider} />
-
+        {/* <PapperBlock title={intl.formatMessage(messages.quotes)} icon="format_quote" whiteBg noMargin desc="">
+          <Quote align="left" content="Imagine all the people living life in peace. You may say I'm a dreamer, but I'm not the only one. I hope someday you'll join us, and the world will be as one." footnote="John Lennon" />
+        </PapperBlock>
+        <Divider className={classes.divider} />
+        <MapWidget /> */}
         {/* ----------------------------------------------------------------------*/}
       </Grid>
       <Grid item md={6} xs={12}>
@@ -55,7 +59,45 @@ function About(props) {
           <ProgressWidget />
         </div>
         {/* ----------------------------------------------------------------------*/}
-
+        {/* My Albums */}
+        {/* <PapperBlock title={intl.formatMessage(messages.my_album) + ' (6)'} icon="collections" whiteBg desc="">
+          <div className={classes.albumRoot}>
+            <GridList cellHeight={180} className={classes.gridList}>
+              {
+                imgData.map((tile, index) => {
+                  if (index >= 4) {
+                    return false;
+                  }
+                  return (
+                    <GridListTile key={index.toString()}>
+                      <img src={tile.img} className={classes.img} alt={tile.title} />
+                      <GridListTileBar
+                        title={tile.title}
+                        subtitle={(
+                          <span>
+                            by:&nbsp;
+                            {tile.author}
+                          </span>
+                        )}
+                        actionIcon={(
+                          <IconButton className={classes.icon}>
+                            <InfoIcon />
+                          </IconButton>
+                        )}
+                      />
+                    </GridListTile>
+                  );
+                })
+              }
+            </GridList>
+          </div>
+          <Divider className={classes.divider} />
+          <Grid container justify="center">
+            <Button color="secondary" className={classes.button}>
+              <FormattedMessage {...messages.see_all} />
+            </Button>
+          </Grid>
+        </PapperBlock> */}
         {/* ----------------------------------------------------------------------*/}
         {/* My Connection Me */}
         <PapperBlock title={intl.formatMessage(messages.my_connection) + ' (29)'} icon="supervisor_account" whiteBg desc="">

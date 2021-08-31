@@ -16,9 +16,9 @@ import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './widget-jss';
 
 function ProfileWidget(props) {
-  const { classes, intl } = props;
+  const { classes, intl, name } = props;
   return (
-    <PapperBlock title={intl.formatMessage(messages.about_title)} icon="contacts" whiteBg noMargin desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed urna in justo euismod condimentum.">
+    <PapperBlock title={intl.formatMessage(messages.about_title) + " " + name} icon="contacts" whiteBg noMargin desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed urna in justo euismod condimentum.">
       <Divider className={classes.divider} />
       <List dense className={classes.profileList}>
         <ListItem>
