@@ -93,7 +93,7 @@ function UserProfile(props) {
         <meta property="twitter:description" content={description} />
       </Helmet>
       <Cover
-        coverImg="/images/avatars/pp_boy4.jpg"
+        coverImg={profData.prof_background || "/images/avatars/pp_boy4.jpg"}
         avatar={profData.avatar}
         name={profData.name}
         desc={profData.role}
@@ -130,7 +130,7 @@ function UserProfile(props) {
           </Tabs>
         </Hidden>
       </AppBar>
-      {value === 0 && <TabContainer><About assignments={assignData} /></TabContainer>}
+      {value === 0 && <TabContainer><About profData={profData} assignments={assignData} /></TabContainer>}
       {/* {value === 1 && <TabContainer><Connection /></TabContainer>}
       {value === 2 && <TabContainer><Albums /></TabContainer>} */}
     </div>

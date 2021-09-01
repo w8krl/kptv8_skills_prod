@@ -205,7 +205,7 @@ getAssignments = (id) =>{
 
     return new Promise((resolve, reject) => {
         console.log("id = " + id);
-        db.query('SELECT CONCAT( left(MONTHNAME(start),3) , " \'",right(YEAR(`start`), 2)) AS `time`, title, `desc`  fROM res_assignments WHERE id_res = ? order by 1 desc',
+        db.query('SELECT CONCAT( left(MONTHNAME(start),3) , " \'",right(YEAR(`start`), 2)) AS `time`, title, `desc`, end  fROM res_assignments WHERE id_res = ? order by 1 desc',
             [id], (error, results) => {
                 if (error) {
                     return reject(error);

@@ -3,6 +3,7 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import pink from '@material-ui/core/colors/pink';
 import green from '@material-ui/core/colors/green';
+import blue from '@material-ui/core/colors/blue';
 const styles = theme => ({
   profileList: {
     padding: 0,
@@ -24,6 +25,9 @@ const styles = theme => ({
   },
   greenAvatar: {
     backgroundColor: green[500],
+  },
+  blueAvatar: {
+    backgroundColor: blue[500],
   },
   divider: {
     margin: `${theme.spacing(1.5)}px 0`,

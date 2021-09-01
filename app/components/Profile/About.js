@@ -29,9 +29,10 @@ import MapWidget from '../Widget/MapWidget';
 import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 function About(props) {
-  const { classes, intl, assignments } = props;
+  const { classes, intl, assignments, profData } = props;
   return (
     <Grid
       container
@@ -42,47 +43,21 @@ function About(props) {
     >
       <Grid item md={6} xs={12}>
         {/* About Me */}
-        <ProfileWidget name="test" />
+        <ProfileWidget assignments={assignments} profData={profData} />
         <Divider className={classes.divider} />
-        <TimelineWidget timelineData={props.assignments} />
+        <TimelineWidget timelineData={assignments} />
         <Divider className={classes.divider} />
 
         {/* ----------------------------------------------------------------------*/}
-      </Grid>
-      <Grid item md={6} xs={12}>
-        {/* Profile Progress */}
-        <div className={classes.progressRoot}>
-          <ProgressWidget />
-        </div>
-        {/* ----------------------------------------------------------------------*/}
 
-        {/* ----------------------------------------------------------------------*/}
-        {/* My Connection Me */}
-        <PapperBlock title={intl.formatMessage(messages.my_connection) + ' (29)'} icon="supervisor_account" whiteBg desc="">
+        {/* My CV */}
+        <PapperBlock title="CV" icon="supervisor_account" whiteBg desc="">
           <List dense className={classes.profileList}>
             <ListItem button>
               <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.orangeAvatar)}>H</Avatar>
+                <Avatar className={classNames(classes.avatar, classes.blueAvatar)}><DescriptionIcon/></Avatar>
               </ListItemAvatar>
-              <ListItemText primary="Harry Wells" secondary="2 Mutual Connection" />
-            </ListItem>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.purpleAvatar)}>J</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="John DOe" secondary="8 Mutual Connection" />
-            </ListItem>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.pinkAvatar)}>V</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Victor Wanggai" secondary="12 Mutual Connection" />
-            </ListItem>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>H</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Baron Phoenix" secondary="10 Mutual Connection" />
+              <ListItemText primary={profData.cv_path} secondary={profData.cv_path && `Added ${profData.last_modified}`} />
             </ListItem>
           </List>
           <Divider className={classes.divider} />
@@ -92,11 +67,21 @@ function About(props) {
             </Button>
           </Grid>
         </PapperBlock>
+        {/* ----------------------------------------------------------------------*/}    
+      </Grid>
+      <Grid item md={6} xs={12}>
+        {/* Profile Progress */}
+        <div className={classes.progressRoot}>
+          <ProgressWidget />
+        </div>
         {/* ----------------------------------------------------------------------*/}
+
+        {/* ----------------------------------------------------------------------*/}
+
         {/* My Interests */}
         <PapperBlock title={intl.formatMessage(messages.my_interests)} whiteBg desc="">
           <Grid container className={classes.colList}>
-            <Grid item md={6}>
+            <Grid item lg={12} md={12}>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar className={classNames(classes.avatar, classes.purpleAvatar)}>
@@ -139,6 +124,27 @@ function About(props) {
           </Grid>
         </PapperBlock>
         {/* ----------------------------------------------------------------------*/}
+
+        {/* My Connection Me */}
+        <PapperBlock title="Associates" icon="supervisor_account" whiteBg desc="">
+          <List dense className={classes.profileList}>
+            <ListItem button>
+              <ListItemAvatar>
+                <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>H</Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Baron Phoenix" secondary="10 Mutual Connection" />
+            </ListItem>
+          </List>
+          <Divider className={classes.divider} />
+          <Grid container justify="center">
+            <Button color="secondary" className={classes.button}>
+              <FormattedMessage {...messages.see_all} />
+            </Button>
+          </Grid>
+        </PapperBlock>
+        {/* ----------------------------------------------------------------------*/}
+
+    
       </Grid>
     </Grid>
   );
