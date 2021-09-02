@@ -64,11 +64,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 function About(props) {
-  
+  const custClasses = useStyles();
+  const { classes, intl, assignments, profData } = props;
+  const [skillsData, setSkillsData] = useState(props.skills);
  
   let notiOptions = {
-    position: toast.POSITION.BOTTOM_RIGHT,
-    delay: 1000
+    position: toast.POSITION.BOTTOM_RIGHT
+    // delay: 1000
   }
   
   const handleDeleteSkill = (id) => {
@@ -76,7 +78,8 @@ function About(props) {
     Axios.post('http://localhost:8888/deleteSkill', { id: id })
       .then((response) => {
         if (response.data.status) {
-          toast.success(response.data.text, notiOptions)
+          toast.success(response.data.text, notiOptions);
+          setSkillsData(skillsData.filter(item=>item.id!==id));
         } else {
           toast.error(response.data.text, notiOptions)
         }
@@ -84,18 +87,16 @@ function About(props) {
       })
       .catch(e => { console.log(e) })
 
-      setSkillsData(skillsData.filter(item=>item.id!==id));
+      
 
   };
 
-  const custClasses = useStyles();
-  const { classes, intl, assignments, profData, skills } = props;
-  const [skillsData, setSkillsData] = useState(skills);
+
 
   useEffect(() => {
-    
-    setSkillsData(skills);
-  })
+      setSkillsData(props.skills);
+    }
+  )
 
 
   return (
