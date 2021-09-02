@@ -29,10 +29,10 @@ function ProfileWidget(props) {
 
   const blurb = () => {
     
-    let activeAssign = assignments.filter(i=>i.end);
-    let totAssign = assignments.length
+    let activeAssign = assignments.filter(i=> !i.end && i.id_res === profData.id);
+    let totAssign = assignments.filter(i=> i.id_res === profData.id);
 
-    let active = (profData.active_status === "active") ? ` Currently active, working on ${activeAssign.length} project (s). Has worked on a total of ${totAssign} projects.` : "Not currently active.";
+    let active = (profData.active_status === "active") ? ` Currently active, working on ${activeAssign.length} project (s). Has worked on a total of ${totAssign.length} projects.` : "Not currently active.";
     
     return active;
   }

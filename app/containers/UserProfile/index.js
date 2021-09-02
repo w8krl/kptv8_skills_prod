@@ -28,7 +28,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import messages from 'enl-components/Profile/messages';
 
 function TabContainer(props) {
-  console.log(props);
   const { children } = props;
   return (
     <div style={{ paddingTop: 8 * 3 }}>
@@ -60,7 +59,9 @@ function UserProfile(props) {
   const [loadingData, setLoadingData] = useState(true);
   const [profData, setProfData] = useState([]);
   const [assignData, setAssignData] = useState([]);
+  const [compData, setCompData] = useState([]);
 
+  let compTagData;
   
 
   useEffect(() => {
@@ -70,7 +71,7 @@ function UserProfile(props) {
         .then((response) => {
           setProfData(response.data.profile);
           setAssignData(response.data.assignments);
-          console.log(response.data.assignments);
+          setCompData(response.data.comp_tag_data);
           setLoadingData(false);
         });
     }
@@ -80,6 +81,7 @@ function UserProfile(props) {
     }
   }, []);
 
+  const defaultAvatar = "/images/avatars/pp_boy4.jpg";
 
 
   return (
@@ -93,8 +95,8 @@ function UserProfile(props) {
         <meta property="twitter:description" content={description} />
       </Helmet>
       <Cover
-        coverImg={profData.prof_background || "/images/avatars/pp_boy4.jpg"}
-        avatar={profData.avatar}
+        coverImg={profData.prof_background || defaultAvatar}
+        avatar={profData.avatar || defaultAvatar}
         name={profData.name}
         desc={profData.role}
         active={profData.active_status}
@@ -130,7 +132,7 @@ function UserProfile(props) {
           </Tabs>
         </Hidden>
       </AppBar>
-      {value === 0 && <TabContainer><About profData={profData} assignments={assignData} /></TabContainer>}
+      {value === 0 && <TabContainer><About skills={compData} profData={profData} assignments={assignData} /></TabContainer>}
       {/* {value === 1 && <TabContainer><Connection /></TabContainer>}
       {value === 2 && <TabContainer><Albums /></TabContainer>} */}
     </div>

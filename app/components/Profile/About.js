@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect  } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -14,6 +14,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
+import StarsIcon from '@material-ui/icons/Stars';
 import InfoIcon from '@material-ui/icons/Info';
 import AcUnit from '@material-ui/icons/AcUnit';
 import Adb from '@material-ui/icons/Adb';
@@ -30,9 +31,73 @@ import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
 import DescriptionIcon from '@material-ui/icons/Description';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Axios from 'axios';
+
+
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    padding: theme.spacing(1),
+    margin: 2,
+  },
+  chip: {
+    margin: theme.spacing(0.7),
+    padding: "1rem",
+    color: "#00bcd4"
+
+  },
+}));
+
+
+
+
 
 function About(props) {
-  const { classes, intl, assignments, profData } = props;
+  
+ 
+  let notiOptions = {
+    position: toast.POSITION.BOTTOM_RIGHT,
+    delay: 1000
+  }
+  
+  const handleDeleteSkill = (id) => {
+
+    Axios.post('http://localhost:8888/deleteSkill', { id: id })
+      .then((response) => {
+        if (response.data.status) {
+          toast.success(response.data.text, notiOptions)
+        } else {
+          toast.error(response.data.text, notiOptions)
+        }
+
+      })
+      .catch(e => { console.log(e) })
+
+      setSkillsData(skillsData.filter(item=>item.id!==id));
+
+  };
+
+  const custClasses = useStyles();
+  const { classes, intl, assignments, profData, skills } = props;
+  const [skillsData, setSkillsData] = useState(skills);
+
+  useEffect(() => {
+    
+    setSkillsData(skills);
+  })
+
+
   return (
     <Grid
       container
@@ -45,7 +110,7 @@ function About(props) {
         {/* About Me */}
         <ProfileWidget assignments={assignments} profData={profData} />
         <Divider className={classes.divider} />
-        <TimelineWidget timelineData={assignments} />
+        <TimelineWidget id={profData.id} timelineData={assignments} />
         <Divider className={classes.divider} />
 
         {/* ----------------------------------------------------------------------*/}
@@ -79,61 +144,34 @@ function About(props) {
         {/* ----------------------------------------------------------------------*/}
 
         {/* My Interests */}
-        <PapperBlock title={intl.formatMessage(messages.my_interests)} whiteBg desc="">
-          <Grid container className={classes.colList}>
-            <Grid item lg={12} md={12}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.purpleAvatar)}>
-                    <AcUnit />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Snow" secondary="100 Connected" />
-              </ListItem>
-            </Grid>
-            <Grid item md={6}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>
-                    <Adb />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Android" secondary="120 Connected" />
-              </ListItem>
-            </Grid>
-            <Grid item md={6}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.pinkAvatar)}>
-                    <AllInclusive />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="All Inclusive" secondary="999+ Connected" />
-              </ListItem>
-            </Grid>
-            <Grid item md={6}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.orangeAvatar)}>
-                    <AssistantPhoto />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="My Country" secondary="99+ Connected" />
-              </ListItem>
-            </Grid>
-          </Grid>
-        </PapperBlock>
-        {/* ----------------------------------------------------------------------*/}
+        
+        <Paper >
+          <div className={custClasses.root}>
+            {skillsData.map((i) => (
+                <Chip key={i.id}
+                  icon={<StarsIcon />}
+                  label={i.tag}
+                  onDelete={(e) => handleDeleteSkill(i.id)}
+                  className={custClasses.chip}
+                  color="default"
+                />
+            ))}
+          </div>
+        </Paper>
 
+        {/* ----------------------------------------------------------------------*/}
+        <br />
         {/* My Connection Me */}
-        <PapperBlock title="Associates" icon="supervisor_account" whiteBg desc="">
+        <PapperBlock title="Related People" icon="supervisor_account" whiteBg desc="">
           <List dense className={classes.profileList}>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>H</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Baron Phoenix" secondary="10 Mutual Connection" />
-            </ListItem>
+          {assignments.map((item, index) => item.id_res !== profData.id && (
+              <ListItem key={index} button component="a" href={`user-settings?user=${item.id_res}`}>
+                <ListItemAvatar>
+                  <Avatar src={item.avatar || "/images/avatars/pp_boy4.jpg"} className={classNames(classes.avatar, classes.greenAvatar)}></Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={item.name} secondary={item.role} />
+              </ListItem>))
+            }
           </List>
           <Divider className={classes.divider} />
           <Grid container justify="center">
@@ -146,6 +184,7 @@ function About(props) {
 
     
       </Grid>
+      <ToastContainer />
     </Grid>
   );
 }

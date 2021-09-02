@@ -12,12 +12,16 @@ import styles from './widget-jss';
 
 
 function TimelineWidget(props) {
-  const { classes, intl, timelineData } = props;
+  const { classes, intl, timelineData, id } = props;
+
+  let totAssign = timelineData.filter(i=> i.id_res === id);
+
   return ( 
-    <PapperBlock whiteBg noMargin title={`${timelineData.length} ${intl.formatMessage(messages.activity_title)}`} icon="av_timer" desc="">
+    <PapperBlock whiteBg noMargin title={`${totAssign.length} ${intl.formatMessage(messages.activity_title)}`} icon="av_timer" desc="">
       <div className={classes.activityWrap}>
         <List>
-          {timelineData.map((item, index) => (
+          
+          {timelineData.map((item, index) => item.id_res === id && (
             <ListItem key={index.toString()} className={classes.activityList}>
               <ListItemIcon>
                 <div className={classes.timeDot}>
