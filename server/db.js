@@ -201,6 +201,7 @@ app.post('/getSkills', (req, res)=>{
 })
 
 
+//Profile data
 
 getProfile = (id) =>{
 
@@ -270,8 +271,6 @@ getCompTagData = (id) =>{
     });
 };
 
-
-
 app.post('/userProfile', async (req, res, next)=>{
 
     try {
@@ -279,6 +278,52 @@ app.post('/userProfile', async (req, res, next)=>{
         const assign = await getAssignments(req.body.id);
         const comp_tag_data = await getCompTagData(req.body.id);
         res.status(200).json({profile: profile[0], assignments : assign, comp_tag_data : comp_tag_data});
+    } catch(e) {
+        res.sendStatus(500);
+    }
+});
+
+//Dashboard data
+
+getActAssign = () =>{
+
+    return new Promise((resolve, reject)=>{
+
+        let sql = `SELECT COUNT(*) as res_count, 
+        if(end IS NULL, true, false) AS 'active'
+        FROM res_assignments
+        GROUP BY END `;
+
+        db.query(sql,
+            (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+getActRes = () =>{
+    return new Promise((resolve, reject)=>{
+        let sql = `SELECT active_status, COUNT(active_status) AS count FROM res GROUP BY 1`;
+        db.query(sql,
+            (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+
+app.post('/dashData', async (req, res, next)=>{
+
+    try {
+        const actAssignments = await getActAssign();
+        const actRes = await getActRes();
+        res.status(200).json({actAssignments,actRes});
     } catch(e) {
         res.sendStatus(500);
     }

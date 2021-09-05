@@ -66,20 +66,30 @@ const useStyles = makeStyles((theme) => ({
 function About(props) {
   const custClasses = useStyles();
   const { classes, intl, assignments, profData } = props;
-  const [skillsData, setSkillsData] = useState(props.skills);
+  const [skillsData, setSkillsData] = useState([]);
+  const [count, setCount] = useState(0);
+
+  const [flag, setFlag] = useState(false);
  
   let notiOptions = {
     position: toast.POSITION.BOTTOM_RIGHT
     // delay: 1000
   }
-  
+
+  useEffect(() => {
+    if (count === 0 ){
+      setSkillsData(props.skills);
+    }
+  });
+
   const handleDeleteSkill = (id) => {
 
     Axios.post('http://localhost:8888/deleteSkill', { id: id })
       .then((response) => {
         if (response.data.status) {
           toast.success(response.data.text, notiOptions);
-          setSkillsData(skillsData.filter(item=>item.id!==id));
+          setCount(preCount => count + 1);
+          setSkillsData(skillsData.filter(item=>item.id!==id))
         } else {
           toast.error(response.data.text, notiOptions)
         }
@@ -87,16 +97,23 @@ function About(props) {
       })
       .catch(e => { console.log(e) })
 
-      
-
   };
 
+  const createChips = () => {
+    let chips = skillsData.map((i) => (
+      <Chip key={i.id}
+        icon={<StarsIcon />}
+        label={i.tag}
+        onDelete={(e) => handleDeleteSkill(i.id)}
+        className={custClasses.chip}
+        color="default"
+      />
+    ))
 
+    return chips;
 
-  useEffect(() => {
-      setSkillsData(props.skills);
-    }
-  )
+  }
+
 
 
   return (
@@ -148,15 +165,7 @@ function About(props) {
         
         <Paper >
           <div className={custClasses.root}>
-            {skillsData.map((i) => (
-                <Chip key={i.id}
-                  icon={<StarsIcon />}
-                  label={i.tag}
-                  onDelete={(e) => handleDeleteSkill(i.id)}
-                  className={custClasses.chip}
-                  color="default"
-                />
-            ))}
+            {createChips()}
           </div>
         </Paper>
 
