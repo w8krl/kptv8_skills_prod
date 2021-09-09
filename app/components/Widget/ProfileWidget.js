@@ -15,10 +15,33 @@ import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './widget-jss';
 
+
+
+
 function ProfileWidget(props) {
-  const { classes, intl } = props;
+
+  const openMapTab = () => {
+    window.open(
+      `https://www.google.com/maps/place/${profData.address}`,
+      '_blank'
+    );
+  }
+
+  const blurb = () => {
+    
+    let activeAssign = assignments.filter(i=> !i.end && i.id_res === profData.id);
+    let totAssign = assignments.filter(i=> i.id_res === profData.id);
+
+    let active = (profData.active_status === "active") ? ` Currently active, working on ${activeAssign.length} project (s). Has worked on a total of ${totAssign.length} projects.` : "Not currently active.";
+    
+    return active;
+  }
+
+
+
+  const { classes, intl, profData, assignments } = props;
   return (
-    <PapperBlock title={intl.formatMessage(messages.about_title)} icon="contacts" whiteBg noMargin desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed urna in justo euismod condimentum.">
+    <PapperBlock title={intl.formatMessage(messages.about_title) + " " + profData.name} icon="contacts" whiteBg noMargin desc={blurb()}>
       <Divider className={classes.divider} />
       <List dense className={classes.profileList}>
         <ListItem>
@@ -27,23 +50,23 @@ function ProfileWidget(props) {
               <DateRange />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={intl.formatMessage(messages.born)} secondary="Jan 9, 1994" />
+          <ListItemText primary={intl.formatMessage(messages.born)} secondary={profData.dob} />
         </ListItem>
-        <ListItem>
+        <ListItem component="a" href={`tel:${profData.pri_contact_no}`}>
           <ListItemAvatar>
             <Avatar>
               <LocalPhone />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={intl.formatMessage(messages.phone)} secondary="(+62)8765432190" />
+          <ListItemText primary={intl.formatMessage(messages.phone)} secondary={profData.pri_contact_no} />
         </ListItem>
-        <ListItem>
+        <ListItem component="a" target="_blank" href={`https://www.google.com/maps/place/${profData.address}`} >
           <ListItemAvatar>
             <Avatar>
               <LocationOn />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={intl.formatMessage(messages.address)} secondary="Chicendo Street no.105 Block A/5A - Barcelona, Spain" />
+          <ListItemText  primary={intl.formatMessage(messages.address)} secondary={profData.address} />
         </ListItem>
       </List>
     </PapperBlock>

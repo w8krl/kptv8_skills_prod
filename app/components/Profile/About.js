@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect  } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -14,6 +14,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
+import StarsIcon from '@material-ui/icons/Stars';
 import InfoIcon from '@material-ui/icons/Info';
 import AcUnit from '@material-ui/icons/AcUnit';
 import Adb from '@material-ui/icons/Adb';
@@ -29,9 +30,92 @@ import MapWidget from '../Widget/MapWidget';
 import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
+import DescriptionIcon from '@material-ui/icons/Description';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Axios from 'axios';
+
+
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    padding: theme.spacing(1),
+    margin: 2,
+  },
+  chip: {
+    margin: theme.spacing(0.7),
+    padding: "1rem",
+    color: "#00bcd4"
+
+  },
+}));
+
+
+
+
 
 function About(props) {
-  const { classes, intl } = props;
+  const custClasses = useStyles();
+  const { classes, intl, assignments, profData } = props;
+  const [skillsData, setSkillsData] = useState([]);
+  const [count, setCount] = useState(0);
+
+  const [flag, setFlag] = useState(false);
+ 
+  let notiOptions = {
+    position: toast.POSITION.BOTTOM_RIGHT
+    // delay: 1000
+  }
+
+  useEffect(() => {
+    if (count === 0 ){
+      setSkillsData(props.skills);
+    }
+  });
+
+  const handleDeleteSkill = (id) => {
+
+    Axios.post('http://localhost:8888/deleteSkill', { id: id })
+      .then((response) => {
+        if (response.data.status) {
+          toast.success(response.data.text, notiOptions);
+          setCount(preCount => count + 1);
+          setSkillsData(skillsData.filter(item=>item.id!==id))
+        } else {
+          toast.error(response.data.text, notiOptions)
+        }
+
+      })
+      .catch(e => { console.log(e) })
+
+  };
+
+  const createChips = () => {
+    let chips = skillsData.map((i) => (
+      <Chip key={i.id}
+        icon={<StarsIcon />}
+        label={i.tag}
+        onDelete={(e) => handleDeleteSkill(i.id)}
+        className={custClasses.chip}
+        color="default"
+      />
+    ))
+
+    return chips;
+
+  }
+
+
+
   return (
     <Grid
       container
@@ -42,89 +126,21 @@ function About(props) {
     >
       <Grid item md={6} xs={12}>
         {/* About Me */}
-        <ProfileWidget />
+        <ProfileWidget assignments={assignments} profData={profData} />
         <Divider className={classes.divider} />
-        <TimelineWidget />
+        <TimelineWidget id={profData.id} timelineData={assignments} />
         <Divider className={classes.divider} />
-        <PapperBlock title={intl.formatMessage(messages.quotes)} icon="format_quote" whiteBg noMargin desc="">
-          <Quote align="left" content="Imagine all the people living life in peace. You may say I'm a dreamer, but I'm not the only one. I hope someday you'll join us, and the world will be as one." footnote="John Lennon" />
-        </PapperBlock>
-        <Divider className={classes.divider} />
-        <MapWidget />
+
         {/* ----------------------------------------------------------------------*/}
-      </Grid>
-      <Grid item md={6} xs={12}>
-        {/* Profile Progress */}
-        <div className={classes.progressRoot}>
-          <ProgressWidget />
-        </div>
-        {/* ----------------------------------------------------------------------*/}
-        {/* My Albums */}
-        <PapperBlock title={intl.formatMessage(messages.my_album) + ' (6)'} icon="collections" whiteBg desc="">
-          <div className={classes.albumRoot}>
-            <GridList cellHeight={180} className={classes.gridList}>
-              {
-                imgData.map((tile, index) => {
-                  if (index >= 4) {
-                    return false;
-                  }
-                  return (
-                    <GridListTile key={index.toString()}>
-                      <img src={tile.img} className={classes.img} alt={tile.title} />
-                      <GridListTileBar
-                        title={tile.title}
-                        subtitle={(
-                          <span>
-                            by:&nbsp;
-                            {tile.author}
-                          </span>
-                        )}
-                        actionIcon={(
-                          <IconButton className={classes.icon}>
-                            <InfoIcon />
-                          </IconButton>
-                        )}
-                      />
-                    </GridListTile>
-                  );
-                })
-              }
-            </GridList>
-          </div>
-          <Divider className={classes.divider} />
-          <Grid container justify="center">
-            <Button color="secondary" className={classes.button}>
-              <FormattedMessage {...messages.see_all} />
-            </Button>
-          </Grid>
-        </PapperBlock>
-        {/* ----------------------------------------------------------------------*/}
-        {/* My Connection Me */}
-        <PapperBlock title={intl.formatMessage(messages.my_connection) + ' (29)'} icon="supervisor_account" whiteBg desc="">
+
+        {/* My CV */}
+        <PapperBlock title="CV" icon="supervisor_account" whiteBg desc="">
           <List dense className={classes.profileList}>
             <ListItem button>
               <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.orangeAvatar)}>H</Avatar>
+                <Avatar className={classNames(classes.avatar, classes.blueAvatar)}><DescriptionIcon/></Avatar>
               </ListItemAvatar>
-              <ListItemText primary="Harry Wells" secondary="2 Mutual Connection" />
-            </ListItem>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.purpleAvatar)}>J</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="John DOe" secondary="8 Mutual Connection" />
-            </ListItem>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.pinkAvatar)}>V</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Victor Wanggai" secondary="12 Mutual Connection" />
-            </ListItem>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>H</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Baron Phoenix" secondary="10 Mutual Connection" />
+              <ListItemText primary={profData.cv_path} secondary={profData.cv_path && `Added ${profData.last_modified}`} />
             </ListItem>
           </List>
           <Divider className={classes.divider} />
@@ -134,54 +150,51 @@ function About(props) {
             </Button>
           </Grid>
         </PapperBlock>
+        {/* ----------------------------------------------------------------------*/}    
+      </Grid>
+      <Grid item md={6} xs={12}>
+        {/* Profile Progress */}
+        <div className={classes.progressRoot}>
+          <ProgressWidget />
+        </div>
         {/* ----------------------------------------------------------------------*/}
+
+        {/* ----------------------------------------------------------------------*/}
+
         {/* My Interests */}
-        <PapperBlock title={intl.formatMessage(messages.my_interests)} whiteBg desc="">
-          <Grid container className={classes.colList}>
-            <Grid item md={6}>
-              <ListItem>
+        
+        <Paper >
+          <div className={custClasses.root}>
+            {createChips()}
+          </div>
+        </Paper>
+
+        {/* ----------------------------------------------------------------------*/}
+        <br />
+        {/* My Connection Me */}
+        <PapperBlock title="Related People" icon="supervisor_account" whiteBg desc="">
+          <List dense className={classes.profileList}>
+          {assignments.map((item, index) => item.id_res !== profData.id && (
+              <ListItem key={index} button component="a" href={`user-settings?user=${item.id_res}`}>
                 <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.purpleAvatar)}>
-                    <AcUnit />
-                  </Avatar>
+                  <Avatar src={item.avatar || "/images/avatars/pp_boy4.jpg"} className={classNames(classes.avatar, classes.greenAvatar)}></Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="Snow" secondary="100 Connected" />
-              </ListItem>
-            </Grid>
-            <Grid item md={6}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>
-                    <Adb />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Android" secondary="120 Connected" />
-              </ListItem>
-            </Grid>
-            <Grid item md={6}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.pinkAvatar)}>
-                    <AllInclusive />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="All Inclusive" secondary="999+ Connected" />
-              </ListItem>
-            </Grid>
-            <Grid item md={6}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar className={classNames(classes.avatar, classes.orangeAvatar)}>
-                    <AssistantPhoto />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="My Country" secondary="99+ Connected" />
-              </ListItem>
-            </Grid>
+                <ListItemText primary={item.name} secondary={item.role} />
+              </ListItem>))
+            }
+          </List>
+          <Divider className={classes.divider} />
+          <Grid container justify="center">
+            <Button color="secondary" className={classes.button}>
+              <FormattedMessage {...messages.see_all} />
+            </Button>
           </Grid>
         </PapperBlock>
         {/* ----------------------------------------------------------------------*/}
+
+    
       </Grid>
+      <ToastContainer />
     </Grid>
   );
 }

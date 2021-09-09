@@ -144,6 +144,21 @@ app.post('/getRes', (req, res)=>{
 
 })
 
+app.post('/deleteSkill', (req, res)=>{
+
+    let id = req.body.id;
+    let sql = 'delete from comp_tag_data where id = ?';
+    
+    db.query(sql, [id], (err, results) => {
+        if (err) {
+            res.send({ status: false, text: "Something went wrong... " });
+        } else {
+            res.send({ status: true, text: "Skill Deleted!" });
+        }
+    });
+
+})
+
 app.post('/getSkills', (req, res)=>{
 
     let sql = `SELECT "root" AS label, 1 AS value, NULL AS parent UNION
@@ -184,6 +199,135 @@ app.post('/getSkills', (req, res)=>{
     })
 
 })
+
+
+//Profile data
+
+getProfile = (id) =>{
+
+    return new Promise((resolve, reject)=>{
+            console.log("id = " + id);
+        db.query('select * from res where id=? limit 1',
+            [id],  (error, results)=>{
+            if(error){
+                return reject(error);
+            }
+            return resolve(results);
+        });
+    });
+};
+
+
+
+getAssignments = (id) =>{
+
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT CONCAT( left(MONTHNAME(ra.start),3) , " \'",right(YEAR(ra.start), 2)) AS time, 
+        ra.title, 
+        ra.desc, 
+        ra.end, 
+        ra.id_res,
+        r.avatar,
+        r.name,
+        r.role
+        fROM res_assignments ra
+        LEFT JOIN res r ON 
+        r.id = ra.id_res
+        WHERE 
+        ra.id_proj IN (SELECT id_proj FROM res_assignments WHERE id_res = ?)  
+        order by 1 desc`;
+
+        db.query(sql,
+            [id], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+getCompTagData = (id) =>{
+
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT 
+        ctd.id,
+        ct.tag,
+        sd.sub_domain,
+        cd.domain
+        FROM comp_tag_data ctd 
+        LEFT JOIN comp_tags ct ON ctd.comp_tag_id = ct.id
+        LEFT JOIN comp_subdomain sd ON  sd.id = ct.parent_subdomain
+        LEFT JOIN comp_domain cd ON cd.id = sd.parent_domain
+        WHERE res_id = ?`;
+
+        db.query(sql,
+            [id], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+app.post('/userProfile', async (req, res, next)=>{
+
+    try {
+        const profile = await getProfile(req.body.id);
+        const assign = await getAssignments(req.body.id);
+        const comp_tag_data = await getCompTagData(req.body.id);
+        res.status(200).json({profile: profile[0], assignments : assign, comp_tag_data : comp_tag_data});
+    } catch(e) {
+        res.sendStatus(500);
+    }
+});
+
+//Dashboard data
+
+getActAssign = () =>{
+
+    return new Promise((resolve, reject)=>{
+
+        let sql = `SELECT COUNT(*) as res_count, 
+        if(end IS NULL, true, false) AS 'active'
+        FROM res_assignments
+        GROUP BY END `;
+
+        db.query(sql,
+            (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+getActRes = () =>{
+    return new Promise((resolve, reject)=>{
+        let sql = `SELECT active_status, COUNT(active_status) AS count FROM res GROUP BY 1`;
+        db.query(sql,
+            (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
+            });
+    });
+};
+
+
+app.post('/dashData', async (req, res, next)=>{
+
+    try {
+        const actAssignments = await getActAssign();
+        const actRes = await getActRes();
+        res.status(200).json({actAssignments,actRes});
+    } catch(e) {
+        res.sendStatus(500);
+    }
+});
 
 
 app.listen(port, () => {

@@ -105,12 +105,16 @@ function handleCellEditCommit(e){
   window.confirm("Are you sure?");
 }
 
-function handleCellClick(e) {
-  // let target = `/app/profile/${e.id}`;
-  // return <Redirect to={target}/>
-}
+
 
 export default function DataTable() {
+  let history = useHistory();
+
+  function handleCellClick(e) {
+    history.push({pathname: "/app/user-settings", state: {profileId: e.id},search: `?user=${e.id}`,});
+    // let target = `/app/profile/${e.id}`;
+    // return <Redirect to={target}/>
+  }
 
   const [loadingData, setLoadingData] = useState(true);
   const [data, setData] = useState([]);

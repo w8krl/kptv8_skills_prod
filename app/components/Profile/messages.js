@@ -33,8 +33,8 @@ export default defineMessages({
     defaultMessage: 'My Connection',
   },
   my_interests: {
-    id: `${scope}.about.my_interests`,
-    defaultMessage: 'My Interest',
+    id: `${scope}.about.skills`,
+    defaultMessage: 'Skills',
   },
   see_all: {
     id: `${scope}.about.see_all`,

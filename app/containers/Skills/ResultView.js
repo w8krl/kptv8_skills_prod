@@ -24,7 +24,7 @@ export default ({ result, onClickLink,...rest }) => (
     <div onClick={onClickLink} className="sui-result__header">
 
     {/* <a class="sui-result__title sui-result__title-link" href="504" target="_blank" rel="noopener noreferrer">Naginbhai Patel</a>         */}
-     <a className="sui-result__title-link" href={"people/" + result.id.raw}> 
+     <a className="sui-result__title-link" href={"user-settings?user=" + result.id.raw}> 
                 <span
                     className="sui-result__title"
                     // Snippeted results contain search term highlights with html and are
@@ -82,10 +82,10 @@ export default ({ result, onClickLink,...rest }) => (
             }}
           />
         </li>
-        {/* <li>
-          <span className="sui-result__key">Critic Score</span>{" "}
+        <li>
+          <span className="sui-result__key">Internal ID</span>{" "}
           <span className="sui-result__value">{result.id.raw}</span>
-        </li> */}
+        </li>
         <li>
           <span className="sui-result__key">Service Type</span>{" "}
           <span className="sui-result__value">{result.service_desc.raw}</span>
