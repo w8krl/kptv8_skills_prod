@@ -67,7 +67,7 @@ function UserProfile(props) {
   useEffect(() => {
     async function getData() {
       await Axios
-        .post("http://localhost:8888/userProfile", { id: userId })
+        .post("api/userProfile", { id: userId })
         .then((response) => {
           setProfData(response.data.profile);
           setAssignData(response.data.assignments);

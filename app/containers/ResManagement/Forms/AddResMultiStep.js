@@ -119,7 +119,7 @@ class MultiStepFrm extends React.Component {
         form_data.append("file", this.state.file);
         form_data.append("fileName", this.state.fileName);
 
-        Axios.post('http://localhost:8888/newRes', form_data)
+        Axios.post('api/newRes', form_data)
             .then((response) => {
                 this.props.handleModalSubmit(response);
             })

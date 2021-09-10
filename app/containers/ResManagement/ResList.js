@@ -122,7 +122,7 @@ export default function DataTable() {
   useEffect(() => {
     async function getData() {
       await axios
-        .post("http://localhost:8888/getRes")
+        .post("api/getRes")
         .then((response) => {
           // check if the data is populated
           // console.log(response.data);
