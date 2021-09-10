@@ -307,5 +307,5 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server listening at http://localhost:${port}`);
+  console.log(`Prod server listening at http://localhost:${port}`);
 });

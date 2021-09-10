@@ -84,7 +84,7 @@ function About(props) {
 
   const handleDeleteSkill = (id) => {
 
-    Axios.post('http://localhost:8888/deleteSkill', { id: id })
+    Axios.post('api/deleteSkill', { id: id })
       .then((response) => {
         if (response.data.status) {
           toast.success(response.data.text, notiOptions);
