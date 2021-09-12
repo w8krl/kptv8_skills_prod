@@ -14,15 +14,14 @@ import PhotoLibrary from '@material-ui/icons/PhotoLibrary';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Axios from 'axios';
-import { ProfileWidget } from 'enl-components';
-
-
-import {
+import { ProfileWidget ,
   Cover,
   About,
   Connection,
   Albums
 } from 'enl-components';
+
+
 import styles from 'enl-components/Profile/cover-jss';
 import { injectIntl, intlShape } from 'react-intl';
 import messages from 'enl-components/Profile/messages';
