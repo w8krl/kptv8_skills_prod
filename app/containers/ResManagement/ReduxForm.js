@@ -5,9 +5,9 @@ import brand from 'enl-api/dummy/brand';
 import { withStyles } from '@material-ui/core/styles';
 import { SourceReader, PapperBlock } from 'enl-components';
 import { injectIntl, intlShape } from 'react-intl';
+import Axios from 'axios';
 import messages from './messages';
 import { AddResource } from './Forms';
-import Axios from 'axios';
 
 
 const styles = ({

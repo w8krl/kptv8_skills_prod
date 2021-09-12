@@ -28,7 +28,7 @@ function Application(props) {
       <Switch>
         { /* Home */ }
         <Route exact path="/app" >
-          <Redirect to="/app/Resource-Search" />
+          <Redirect to="/app/resource-list" />
         </Route>
         <Route path="/app/User-Settings" component={Profile} />
         <Route path="/app/dashboard" component={DashboardPage} />

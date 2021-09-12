@@ -7,6 +7,7 @@ import AuthLoading from './AuthLoading';
 export default function withAuthorizationRouter(Component) {
   class AuthenticatedComponent extends React.Component {
     render() {
+      // alert(this.props.uid);
       const { isAuthenticated } = this.props;
       const redirectAfterLogin = this.props.location.pathname; // eslint-disable-line
       const authenticating = isAuth => {
@@ -16,7 +17,7 @@ export default function withAuthorizationRouter(Component) {
         }
         // Is not authenticate
         if (isAuth === false) {
-          return (<Redirect to={`/login?next=${redirectAfterLogin}`} />);
+          return (<Redirect to={`/login-firebase?next=${redirectAfterLogin}`} />);
         }
         // Is authenticate
         return (
@@ -33,16 +34,19 @@ export default function withAuthorizationRouter(Component) {
   }
 
   AuthenticatedComponent.propTypes = {
-    isAuthenticated: PropTypes.bool
+    isAuthenticated: PropTypes.bool,
+    uid: PropTypes.string
   };
 
   AuthenticatedComponent.defaultProps = {
-    isAuthenticated: null
+    isAuthenticated: null,
+    uid: null
   };
 
   const reducer = 'authReducer';
   const mapStateToProps = (state) => ({
     isAuthenticated: state.get(reducer).loggedIn,
+    uid: state.get(reducer).user.uid,
     ...state
   });
 

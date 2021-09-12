@@ -2,10 +2,10 @@ import React, { useMemo, useState, useEffect } from "react";
 import {withRouter} from 'react-router';
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { Profile}  from '../pageListAsync';
-
 import { DataGrid, GridToolbarContainer,
   GridToolbarExport} from '@material-ui/data-grid';
+import { Profile}  from '../pageListAsync';
+
 
 
 
@@ -141,6 +141,7 @@ export default function DataTable() {
 
   return (
     <div style={{ height: 700, width: '100%' }}>
+      <h1>Test</h1>
       <DataGrid
         rows={data}
         columns={columns}
