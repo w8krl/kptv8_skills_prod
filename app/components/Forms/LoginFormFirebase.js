@@ -213,7 +213,7 @@ LoginForm.defaultProps = {
 };
 
 const LoginFormReduxed = reduxForm({
-  form: 'immutableExample',
+  form: 'firebaseLogin',
   enableReinitialize: true,
 })(LoginForm);
 

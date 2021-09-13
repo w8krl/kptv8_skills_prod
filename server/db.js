@@ -301,6 +301,39 @@ app.post('/dashData', async (req, res) => {
   }
 });
 
+//Auth user
+
+const getAuth = (uid) => new Promise((resolve, reject) => {
+  const sql = "select uid, active from sys_users where uid = ? limit 1";
+  db.query(sql, [uid],
+    (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(results);
+    });
+});
+
+
+app.post('/verify', async (req, res) => {
+  console.log(req);
+  const uid  = req.body.uid;
+  try {
+    const authStatus = await getAuth(uid);
+    if(authStatus.length === 1){
+      console.log(authStatus);
+      console.log(uid);
+      
+      res.status(200).json({uid:`${uid} ${Boolean(authStatus[0].active)}`});
+    } else {
+      res.status(200).json(`UID = ${uid}`);
+    }
+    
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
 app.get('/', (req, res) => {
   res.send('Running');
 });

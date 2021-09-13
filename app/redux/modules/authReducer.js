@@ -23,7 +23,6 @@ export const AuthState = new Record({
   loading: false,
   loggedIn: null,
   user: null,
-  uid: null,
   message: null
 });
 
