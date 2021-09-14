@@ -316,7 +316,6 @@ const verifyUser = (email) => new Promise((resolve, reject) => {
 
 
 app.post('/verify', async (req, res) => {
-  console.log("called");
   const email  = req.body.email;
   try {
     const authStatus = await verifyUser(email);
