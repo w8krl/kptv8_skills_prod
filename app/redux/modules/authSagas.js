@@ -1,6 +1,7 @@
 import {
   call, fork, put, take, takeEvery, all
 } from 'redux-saga/effects';
+import axios from 'axios';
 import { firebaseAuth, firebaseDb } from '../../firebase';
 import history from '../../utils/history';
 import {
@@ -9,7 +10,7 @@ import {
   LOGOUT_REQUEST,
   REGISTER_WITH_EMAIL_REQUEST,
   REGISTER_WITH_EMAIL_SUCCESS,
-  PASSWORD_FORGET_REQUEST,
+  PASSWORD_FORGET_REQUEST
 } from '../constants/authConstants';
 import {
   loginSuccess,
@@ -25,7 +26,10 @@ import {
   createUserFailure,
   passwordForgetSuccess,
   passwordForgetFailure,
+  verifyUserSuccess,
+  verifyUserFailure
 } from '../actions/authActions';
+
 
 function getUrlVars() {
   const vars = {};
@@ -53,8 +57,12 @@ function* loginSaga(provider) {
 
 function* loginWithEmailSaga(payload) {
   try {
+    const verifyUserStatus = yield call(axios.post, 'app/api/verify', { email : payload.email });
+    yield put(verifyUserSuccess(verifyUserStatus));
+
     const data = yield call(firebaseAuth.signInWithEmailAndPassword, payload.email, payload.password);
     yield put(loginWithEmailSuccess(data));
+
     if (getUrlVars().next) {
       // Redirect to next route
       yield history.push(getUrlVars().next);
@@ -64,6 +72,7 @@ function* loginWithEmailSaga(payload) {
     }
   } catch (error) {
     yield put(loginWithEmailFailure(error));
+    yield put(verifyUserFailure(error));
   }
 }
 

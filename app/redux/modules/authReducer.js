@@ -16,14 +16,17 @@ import {
   PASSWORD_FORGET_FAILURE,
   PASSWORD_FORGET_SUCCESS,
   SYNC_USER,
-  HIDE_MSG
+  HIDE_MSG,
+  VERIFY_USER_SUCCESS,
+  VERIFY_USER_FAILURE
 } from '../constants/authConstants';
 
 export const AuthState = new Record({
   loading: false,
   loggedIn: null,
   user: null,
-  message: null
+  message: null,
+  verified: null
 });
 
 export default function authReducer(state = new AuthState(), action = {}) {
@@ -46,6 +49,13 @@ export default function authReducer(state = new AuthState(), action = {}) {
         loading: false,
         loggedIn: true
       };
+      
+      case VERIFY_USER_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          verified:true
+        };
 
     case LOGIN_FAILURE:
     case LOGIN_WITH_EMAIL_FAILURE:
@@ -53,10 +63,12 @@ export default function authReducer(state = new AuthState(), action = {}) {
     case CREATE_USER_FAILURE:
     case PASSWORD_FORGET_FAILURE:
     case LOGOUT_FAILURE:
+    case VERIFY_USER_FAILURE:
       return {
         ...state,
         loading: false,
-        message: action.error.message
+        message: action.error.message,
+        verified: false
       };
 
     case PASSWORD_FORGET_SUCCESS:
