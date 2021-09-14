@@ -9,11 +9,9 @@ export default function withAuthorizationRouter(Component) {
     render() {
       // alert(this.props.uid);
       const { isAuthenticated } = this.props;
-      const { user } = this.props;
       const redirectAfterLogin = this.props.location.pathname; // eslint-disable-line
-      const authenticating = (isAuth, user) => {
+      const authenticating = (isAuth) => {
         // Check authentication
-        // if (isAuth === null || user === null) { //else just spins indefinitely - set in saga
         if (isAuth === null) {
           return (<AuthLoading />);
         }
@@ -29,26 +27,23 @@ export default function withAuthorizationRouter(Component) {
 
       return (
         <div>
-          {authenticating(isAuthenticated,user)}
+          {authenticating(isAuthenticated)}
         </div>
       );
     }
   }
 
   AuthenticatedComponent.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    user: PropTypes.object
+    isAuthenticated: PropTypes.bool
   };
 
   AuthenticatedComponent.defaultProps = {
-    isAuthenticated: null,
-    user: null
+    isAuthenticated: null
   };
 
   const reducer = 'authReducer';
   const mapStateToProps = (state) => ({
     isAuthenticated: state.get(reducer).loggedIn,
-    user: state.get(reducer).user,
     ...state
   });
 

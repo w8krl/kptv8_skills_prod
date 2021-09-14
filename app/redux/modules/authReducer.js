@@ -43,12 +43,20 @@ export default function authReducer(state = new AuthState(), action = {}) {
 
     case LOGIN_SUCCESS:
     case LOGIN_WITH_EMAIL_SUCCESS:
-    case CREATE_USER_SUCCESS:
       return {
         ...state,
         loading: false,
-        loggedIn: true
+        loggedIn: true,
+        verified: true
       };
+
+      case CREATE_USER_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          loggedIn: false,
+          verified: false
+        };      
       
       case VERIFY_USER_SUCCESS:
         return {
@@ -90,6 +98,7 @@ export default function authReducer(state = new AuthState(), action = {}) {
         loggedIn: action.user != null,
         user: action.user,
         loading: false,
+        // verified: null,
       };
 
     case HIDE_MSG:

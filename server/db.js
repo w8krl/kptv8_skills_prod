@@ -316,13 +316,15 @@ const verifyUser = (email) => new Promise((resolve, reject) => {
 
 
 app.post('/verify', async (req, res) => {
+  console.log("called");
   const email  = req.body.email;
   try {
     const authStatus = await verifyUser(email);
     if(authStatus.length === 1){      
       res.status(200).json(Boolean(authStatus[0].active));
-    } else {
-      res.sendStatus(401);
+    } 
+    else {
+      res.status(200).json(false);
     }
     
   } catch (e) {

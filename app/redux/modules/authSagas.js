@@ -10,7 +10,9 @@ import {
   LOGOUT_REQUEST,
   REGISTER_WITH_EMAIL_REQUEST,
   REGISTER_WITH_EMAIL_SUCCESS,
-  PASSWORD_FORGET_REQUEST
+  PASSWORD_FORGET_REQUEST,
+  VERIFY_USER_REQUEST
+
 } from '../constants/authConstants';
 import {
   loginSuccess,
@@ -57,8 +59,13 @@ function* loginSaga(provider) {
 
 function* loginWithEmailSaga(payload) {
   try {
-    const verifyUserStatus = yield call(axios.post, 'app/api/verify', { email : payload.email });
-    yield put(verifyUserSuccess(verifyUserStatus));
+    const response = yield call(axios.post, 'app/api/verify', { email : payload.email });
+    const verifyUserStatus = response.data;
+    if (verifyUserStatus){
+      yield put(verifyUserSuccess(verifyUserStatus));
+    } else {
+      yield put(verifyUserFailure(verifyUserStatus));
+    }
 
     const data = yield call(firebaseAuth.signInWithEmailAndPassword, payload.email, payload.password);
     yield put(loginWithEmailSuccess(data));
@@ -143,10 +150,10 @@ function* passwordForgetSaga({ email }) {
 function* loginRootSaga() {
   yield fork(syncUserSaga);
   yield all([
-    takeEvery(LOGIN_REQUEST, loginSaga),
+    // takeEvery(LOGIN_REQUEST, loginSaga),
     takeEvery(LOGIN_WITH_EMAIL_REQUEST, loginWithEmailSaga),
     takeEvery(REGISTER_WITH_EMAIL_REQUEST, registerWithEmailSaga),
-    takeEvery(REGISTER_WITH_EMAIL_SUCCESS, createUserSaga),
+    // takeEvery(REGISTER_WITH_EMAIL_SUCCESS, createUserSaga),
     takeEvery(LOGOUT_REQUEST, logoutSaga),
     takeEvery(PASSWORD_FORGET_REQUEST, passwordForgetSaga)
   ]);
