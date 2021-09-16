@@ -27,3 +27,10 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const SYNC_USER = 'SYNC_USER';
 
 export const HIDE_MSG = 'HIDE_MSG';
+
+
+// Verification
+export const VERIFY_USER_REQUEST = 'VERIFY_USER_REQUEST';
+export const VERIFY_USER_SUCCESS = 'VERIFY_USER_SUCCESS';
+export const VERIFY_USER_FAILURE = 'VERIFY_USER_FAILURE';
+export const SET_VERIFY = 'SET_VERIFY';

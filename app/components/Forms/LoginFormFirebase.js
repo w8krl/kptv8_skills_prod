@@ -106,6 +106,7 @@ function LoginForm(props) {
                 required
                 validate={[required, email]}
                 className={classes.field}
+                autoComplete="on"
               />
             </FormControl>
           </div>
@@ -113,6 +114,7 @@ function LoginForm(props) {
             <FormControl className={classes.formControl}>
               <Field
                 name="password"
+                autoComplete="on"
                 component={TextFieldRedux}
                 type={showPassword ? 'text' : 'password'}
                 label={intl.formatMessage(messages.loginFieldPassword)}
@@ -213,7 +215,7 @@ LoginForm.defaultProps = {
 };
 
 const LoginFormReduxed = reduxForm({
-  form: 'immutableExample',
+  form: 'firebaseLogin',
   enableReinitialize: true,
 })(LoginForm);
 

@@ -10,7 +10,7 @@ export default function withAuthorizationRouter(Component) {
       // alert(this.props.uid);
       const { isAuthenticated } = this.props;
       const redirectAfterLogin = this.props.location.pathname; // eslint-disable-line
-      const authenticating = isAuth => {
+      const authenticating = (isAuth) => {
         // Check authentication
         if (isAuth === null) {
           return (<AuthLoading />);
@@ -34,19 +34,16 @@ export default function withAuthorizationRouter(Component) {
   }
 
   AuthenticatedComponent.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    uid: PropTypes.string
+    isAuthenticated: PropTypes.bool
   };
 
   AuthenticatedComponent.defaultProps = {
-    isAuthenticated: null,
-    uid: null
+    isAuthenticated: null
   };
 
   const reducer = 'authReducer';
   const mapStateToProps = (state) => ({
     isAuthenticated: state.get(reducer).loggedIn,
-    uid: state.get(reducer).user.uid,
     ...state
   });
 

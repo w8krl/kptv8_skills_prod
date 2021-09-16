@@ -222,7 +222,7 @@ RegisterFormFirebase.defaultProps = {
 };
 
 const RegisterFormReduxed = reduxForm({
-  form: 'immutableExample',
+  form: 'loginFirebase',
   enableReinitialize: true,
 })(RegisterFormFirebase);
 

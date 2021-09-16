@@ -301,6 +301,37 @@ app.post('/dashData', async (req, res) => {
   }
 });
 
+//Auth user
+
+const verifyUser = (email) => new Promise((resolve, reject) => {
+  const sql = "select email, active from sys_users where email = ? limit 1";
+  db.query(sql, [email],
+    (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(results);
+    });
+});
+
+
+app.post('/verify', async (req, res) => {
+  const email  = req.body.email;
+  console.log("called");
+  try {
+    const authStatus = await verifyUser(email);
+    if(authStatus.length === 1){      
+      res.status(200).json(Boolean(authStatus[0].active));
+    } 
+    else {
+      res.status(200).json(false);
+    }
+    
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
 app.get('/', (req, res) => {
   res.send('Running');
 });

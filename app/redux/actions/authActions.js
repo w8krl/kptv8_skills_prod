@@ -115,3 +115,24 @@ export const signInWithGoogle = () => login(
 export const signInWithTwitter = () => login(
   new firebase.auth.TwitterAuthProvider()
 );
+
+
+// Verify in DB
+
+export const verifyUserRequest = () => ({
+  type: types.VERIFY_USER_REQUEST
+});
+
+export const verifyUserSuccess = credential => ({
+  type: types.VERIFY_USER_SUCCESS,
+  credential
+});
+
+export const verifyUserFailure = error => ({
+  type: types.VERIFY_USER_FAILURE,
+  error
+});
+export const setVerify = verified => ({
+  type: types.SET_VERIFY,
+  verified
+});

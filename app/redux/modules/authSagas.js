@@ -1,6 +1,7 @@
 import {
   call, fork, put, take, takeEvery, all
 } from 'redux-saga/effects';
+import axios from 'axios';
 import { firebaseAuth, firebaseDb } from '../../firebase';
 import history from '../../utils/history';
 import {
@@ -10,6 +11,8 @@ import {
   REGISTER_WITH_EMAIL_REQUEST,
   REGISTER_WITH_EMAIL_SUCCESS,
   PASSWORD_FORGET_REQUEST,
+  VERIFY_USER_REQUEST
+
 } from '../constants/authConstants';
 import {
   loginSuccess,
@@ -25,7 +28,10 @@ import {
   createUserFailure,
   passwordForgetSuccess,
   passwordForgetFailure,
+  verifyUserFailure,
+  setVerify
 } from '../actions/authActions';
+
 
 function getUrlVars() {
   const vars = {};
@@ -53,17 +59,26 @@ function* loginSaga(provider) {
 
 function* loginWithEmailSaga(payload) {
   try {
-    const data = yield call(firebaseAuth.signInWithEmailAndPassword, payload.email, payload.password);
-    yield put(loginWithEmailSuccess(data));
-    if (getUrlVars().next) {
-      // Redirect to next route
-      yield history.push(getUrlVars().next);
+    const response = yield call(axios.post, 'app/api/verify', { email : payload.email });
+    const verified = response.data;
+
+    if (verified){
+      const data = yield call(firebaseAuth.signInWithEmailAndPassword, payload.email, payload.password);
+      yield put(loginWithEmailSuccess(data));
+  
+      if (getUrlVars().next) {
+        // Redirect to next route
+        yield history.push(getUrlVars().next);
+      } else {
+        // Redirect to dashboard if no next parameter
+        yield history.push('/app');
+      }
     } else {
-      // Redirect to dashboard if no next parameter
-      yield history.push('/app');
+      yield put(loginWithEmailFailure("Unauthorized"));
     }
   } catch (error) {
     yield put(loginWithEmailFailure(error));
+    yield put(verifyUserFailure(error));
   }
 }
 
@@ -75,7 +90,8 @@ function* registerWithEmailSaga(payload) {
     });
     yield put(registerWithEmailSuccess(dataWithName));
     // Redirect to dashboard
-    yield history.push('/app');
+    yield history.push('/');
+    yield call(firebaseAuth.signOut);
   } catch (error) {
     yield put(registerWithEmailFailure(error));
   }
@@ -97,9 +113,25 @@ function* syncUserSaga() {
   while (true) {
     const { user } = yield take(channel);
     if (user) {
-      yield put(syncUser(user));
+      yield put(syncUser(user));      
+      // yield put(syncUser(user));
     } else {
       yield put(syncUser(null));
+    }
+  }
+}
+
+function* verifyUserSaga() {
+  const channel = yield call(firebaseAuth.channel);
+  while (true) {
+    const { user } = yield take(channel);
+    if (user) {
+      const response = yield call(axios.post, 'api/verify', { email : user.email });
+      const verified = response.data;
+      yield put(verifyUser(user));      
+      // yield put(syncUser(user));
+    } else {
+      yield put(verifyUser(null, false));
     }
   }
 }
@@ -134,10 +166,11 @@ function* passwordForgetSaga({ email }) {
 function* loginRootSaga() {
   yield fork(syncUserSaga);
   yield all([
-    takeEvery(LOGIN_REQUEST, loginSaga),
+    // takeEvery(LOGIN_REQUEST, loginSaga),
     takeEvery(LOGIN_WITH_EMAIL_REQUEST, loginWithEmailSaga),
+    // takeEvery(VERIFY_USER_REQUEST, verifyUserSaga),
     takeEvery(REGISTER_WITH_EMAIL_REQUEST, registerWithEmailSaga),
-    takeEvery(REGISTER_WITH_EMAIL_SUCCESS, createUserSaga),
+    // takeEvery(REGISTER_WITH_EMAIL_SUCCESS, createUserSaga),
     takeEvery(LOGOUT_REQUEST, logoutSaga),
     takeEvery(PASSWORD_FORGET_REQUEST, passwordForgetSaga)
   ]);
