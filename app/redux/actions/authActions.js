@@ -119,9 +119,8 @@ export const signInWithTwitter = () => login(
 
 // Verify in DB
 
-export const verifyUserRequest = (uid) => ({
-  type: types.VERIFY_USER_REQUEST,
-  uid
+export const verifyUserRequest = () => ({
+  type: types.VERIFY_USER_REQUEST
 });
 
 export const verifyUserSuccess = credential => ({
@@ -132,4 +131,8 @@ export const verifyUserSuccess = credential => ({
 export const verifyUserFailure = error => ({
   type: types.VERIFY_USER_FAILURE,
   error
+});
+export const setVerify = verified => ({
+  type: types.SET_VERIFY,
+  verified
 });

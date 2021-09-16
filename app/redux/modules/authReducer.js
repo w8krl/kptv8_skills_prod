@@ -17,8 +17,8 @@ import {
   PASSWORD_FORGET_SUCCESS,
   SYNC_USER,
   HIDE_MSG,
-  VERIFY_USER_SUCCESS,
-  VERIFY_USER_FAILURE
+  VERIFY_USER_FAILURE,
+  SET_VERIFY
 } from '../constants/authConstants';
 
 export const AuthState = new Record({
@@ -47,7 +47,7 @@ export default function authReducer(state = new AuthState(), action = {}) {
         ...state,
         loading: false,
         loggedIn: true,
-        verified: true
+        // verified: true
       };
 
       case CREATE_USER_SUCCESS:
@@ -56,13 +56,6 @@ export default function authReducer(state = new AuthState(), action = {}) {
           loading: false,
           loggedIn: false,
           verified: false
-        };      
-      
-      case VERIFY_USER_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          verified:true
         };
 
     case LOGIN_FAILURE:
@@ -91,6 +84,11 @@ export default function authReducer(state = new AuthState(), action = {}) {
         loading: false,
         loggedIn: false
       };
+    case SET_VERIFY:
+      return {
+        ...state,
+        verified: true
+      };
 
     case SYNC_USER:
       return {
@@ -98,7 +96,7 @@ export default function authReducer(state = new AuthState(), action = {}) {
         loggedIn: action.user != null,
         user: action.user,
         loading: false,
-        // verified: null,
+        // verified: action.verified,
       };
 
     case HIDE_MSG:
