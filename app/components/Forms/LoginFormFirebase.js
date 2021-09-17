@@ -156,10 +156,10 @@ function LoginForm(props) {
           </div>
         </form>
       </section>
-      <h5 className={classes.divider}>
+      {/* <h5 className={classes.divider}>
         <FormattedMessage {...messages.loginOr} />
-      </h5>
-      <section className={classes.socmedSideLogin}>
+      </h5> */}
+      {/* <section className={classes.socmedSideLogin}>
         <Button
           variant="contained"
           className={classes.redBtn}
@@ -190,7 +190,7 @@ function LoginForm(props) {
           <i className="ion-logo-github" />
           Github
         </Button>
-      </section>
+      </section> */}
     </Paper>
   );
 }

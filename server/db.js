@@ -265,11 +265,42 @@ app.post('/userProfile', async (req, res) => {
 
 // Dashboard data
 
-const getActAssign = () => new Promise((resolve, reject) => {
-  const sql = `SELECT COUNT(*) as res_count, 
-        if(end IS NULL, true, false) AS 'active'
-        FROM res_assignments
-        GROUP BY END `;
+const getDashStats = () => new Promise((resolve, reject) => {
+  const sql = `SELECT   CASE WHEN actual_end IS null THEN 'active' ELSE 'completed' END AS name,
+  COUNT(*) AS value
+  FROM res_assignments
+  GROUP BY 1
+  -- Contracts ending 30 days
+  UNION 
+  SELECT 
+  'ending_30' AS NAME,
+  COUNT(*) AS value FROM res_assignments WHERE planned_end
+  BETWEEN CURRENT_DATE()
+  AND DATE_ADD(CURRENT_DATE(), INTERVAL 30 DAY) 
+  -- Contracts ending 60 days
+  UNION 
+  SELECT 
+  'ending_60' AS NAME,
+  COUNT(*) AS value FROM res_assignments WHERE planned_end
+  BETWEEN CURRENT_DATE()
+  AND DATE_ADD(CURRENT_DATE(), INTERVAL 60 DAY) 
+  -- Registered skills:
+  UNION 
+  SELECT 
+  'tot_reg_skills' AS NAME,
+  COUNT(*) FROM comp_tag_data AS value
+  -- % of active resources with skills registered
+  UNION 
+  SELECT 'perc_act_user_w_reg_skills' AS name,
+  CASE WHEN (select count(DISTINCT(res_id)) FROM comp_tag_data) >= 1 THEN 
+  (SELECT((SELECT count(DISTINCT(id)) FROM res) * ((select count(DISTINCT(res_id)) FROM comp_tag_data)  / (select COUNT(id) FROM res WHERE active_status = 'active'))))
+   ELSE 0 END AS name
+   -- Get Projects
+   UNION 
+   SELECT CASE WHEN project_end IS null THEN 'project_active' ELSE 'project_completed' END AS name,
+   COUNT(*) AS value
+   from projects GROUP BY 1
+  `;
 
   db.query(sql,
     (error, results) => {
@@ -281,7 +312,10 @@ const getActAssign = () => new Promise((resolve, reject) => {
 });
 
 const getActRes = () => new Promise((resolve, reject) => {
-  const sql = 'SELECT active_status, COUNT(active_status) AS count FROM res GROUP BY 1';
+  const sql = `SELECT 
+  CASE WHEN active_status NOT IN ('active','inactive') THEN 'other' ELSE active_status END AS name,
+  COUNT(*) AS value FROM res GROUP BY 1`;
+    
   db.query(sql,
     (error, results) => {
       if (error) {
@@ -293,13 +327,49 @@ const getActRes = () => new Promise((resolve, reject) => {
 
 app.post('/dashData', async (req, res) => {
   try {
-    const actAssignments = await getActAssign();
+    const actAssignments = await getDashStats();
     const actRes = await getActRes();
     res.status(200).json({ actAssignments, actRes });
   } catch (e) {
     res.sendStatus(500);
   }
 });
+
+
+const getMatrix = () => new Promise((resolve, reject) => {
+  const sql = `SELECT 
+  cd.id AS id_domain,
+  cd.domain,
+  cs.id AS id_sub,
+  cs.sub_domain,
+  ct.id AS id_tag,
+  ct.tag
+  
+  
+  FROM comp_domain cd
+  LEFT JOIN comp_subdomain  cs ON cs.parent_domain = cd.id
+  LEFT JOIN comp_tags ct ON ct.parent_subdomain = cs.id
+  `;
+  db.query(sql,
+    (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(results);
+    });
+});
+
+app.post('/getMatrix', async (req, res) => {
+  try {
+    const headers = await getMatrix();
+    res.status(200).json(headers);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+
+
 
 //Auth user
 

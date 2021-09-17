@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,44 +8,89 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+
+import DashWidgets from './Widgets';
+
+// writing-mode: vertical-rl;
+// text-orientation: mixed;
+
+const styles = {
+  vertical: {
+    writingMode: 'vertical-lr',
+    textOrientation: 'mixed'
+  },
+};
 
 
-export default function SpanningTable() {
+function SkillsDashboard(props) {
 
-  const [actAssignments, setActAssignments] = useState([]);
-  const [actRes, setActRes] = useState([]);
-  const [loadingData, setLoadingData] = useState(true);
+  const [loadingHeaders, setLoadingHeaders] = useState(true);
+  const [headers, setHeaders] = useState([]);
 
   useEffect(() => {
-    async function getData() {
+    async function getMatrix() {
       await axios
-        .post("http://localhost:8888/dashData")
+        .post("api/getMatrix")
         .then((response) => {
-          setActAssignments(response.data.actAssignments);
-          setActRes(response.data.actRes);
-          setLoadingData(false);
+          setHeaders(response.data);
+          setLoadingHeaders(false);
         });
     }
-    if (loadingData) {
-      getData();
+    if (loadingHeaders) {
+      getMatrix();
     }
   }, []);
 
-  const [active] = actAssignments.filter(i => i.active).map(i => i.res_count) || 0;
-  const [inactive] = actAssignments.filter(i => !i.active).map(i => i.res_count) || 0;
+
+  const {classes} = props;
+
 
   return (
     <div>
-      <h1>Active Assignments {active}</h1>
-      <h1>Closed Assignments {inactive}</h1>
-      <h1>Active res</h1>
-      <ul>
+
+      <DashWidgets />
+
+      <h1>Resource Info</h1>
+      {/* <ul>
         {actRes.map(
           (i, index) => {
             return <li key={index}>{i.active_status} | {i.count}</li>
           }
         )}
-      </ul>
+      </ul> */}
+
+      <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+            <TableRow>
+              {headers.map((i, idx) => (
+
+                <TableCell className={classes.vertical} key={idx} component="th" scope="row">
+                  {i.tag}
+                </TableCell>
+
+              ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+      {/* {headers.map(
+          (i, index) => {
+            return <p key={index}>{i.id_domain} </p>
+          }
+        )} */}
     </div>
   );
 }
+
+
+SkillsDashboard.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SkillsDashboard);
