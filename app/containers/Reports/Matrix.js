@@ -12,35 +12,40 @@ import PropTypes from 'prop-types';
 
 import DashWidgets from './Widgets';
 
+import BasicTableComponent from './Testtable'
+
 // writing-mode: vertical-rl;
 // text-orientation: mixed;
 
 const styles = {
-  vertical: {
-    writingMode: 'vertical-lr',
-    textOrientation: 'mixed'
-  },
+  // vertical: {
+  //   writingMode: 'vertical-lr',
+  //   textOrientation: 'mixed'
+  // },
+  test: {
+    color:"red"
+  }
 };
 
 
 function SkillsDashboard(props) {
 
-  const [loadingHeaders, setLoadingHeaders] = useState(true);
-  const [headers, setHeaders] = useState([]);
+  // const [loadingHeaders, setLoadingHeaders] = useState(true);
+  // const [headers, setHeaders] = useState([]);
 
-  useEffect(() => {
-    async function getMatrix() {
-      await axios
-        .post("api/getMatrix")
-        .then((response) => {
-          setHeaders(response.data);
-          setLoadingHeaders(false);
-        });
-    }
-    if (loadingHeaders) {
-      getMatrix();
-    }
-  }, []);
+  // useEffect(() => {
+  //   async function getMatrix() {
+  //     await axios
+  //       .post("api/getMatrix")
+  //       .then((response) => {
+  //         setHeaders(response.data);
+  //         setLoadingHeaders(false);
+  //       });
+  //   }
+  //   if (loadingHeaders) {
+  //     getMatrix();
+  //   }
+  // }, []);
 
 
   const {classes} = props;
@@ -50,6 +55,7 @@ function SkillsDashboard(props) {
     <div>
 
       <DashWidgets />
+      <BasicTableComponent />
 
       <h1>Resource Info</h1>
       {/* <ul>
@@ -60,7 +66,7 @@ function SkillsDashboard(props) {
         )}
       </ul> */}
 
-      <TableContainer component={Paper}>
+      {/* <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
             <TableRow>
@@ -77,7 +83,7 @@ function SkillsDashboard(props) {
 
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainer> */}
 
       {/* {headers.map(
           (i, index) => {
@@ -93,4 +99,5 @@ SkillsDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SkillsDashboard);
+// export default withStyles(styles)(SkillsDashboard);
+export default SkillsDashboard;

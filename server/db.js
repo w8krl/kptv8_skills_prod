@@ -336,37 +336,6 @@ app.post('/dashData', async (req, res) => {
 });
 
 
-const getMatrix = () => new Promise((resolve, reject) => {
-  const sql = `SELECT 
-  cd.id AS id_domain,
-  cd.domain,
-  cs.id AS id_sub,
-  cs.sub_domain,
-  ct.id AS id_tag,
-  ct.tag
-  
-  
-  FROM comp_domain cd
-  LEFT JOIN comp_subdomain  cs ON cs.parent_domain = cd.id
-  LEFT JOIN comp_tags ct ON ct.parent_subdomain = cs.id
-  `;
-  db.query(sql,
-    (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      return resolve(results);
-    });
-});
-
-app.post('/getMatrix', async (req, res) => {
-  try {
-    const headers = await getMatrix();
-    res.status(200).json(headers);
-  } catch (e) {
-    res.sendStatus(500);
-  }
-});
 
 
 
@@ -410,3 +379,92 @@ app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Prod server listening at http://localhost:${port}`);
 });
+
+
+// Matrix data UNDER DEVELOPMENT
+
+
+
+const runQuery = (sql) => new Promise((resolve, reject) => {
+  db.query(sql,
+    (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(results);
+    });
+});
+
+// Table headers 
+
+
+
+app.post('/getMatrixData', async (req, res) => {
+  try {
+
+    let matrixDataSQL = `SELECT  r.id, r.name,  CONCAT("L3_", ctd.id) AS 'skill_item'  FROM res r 
+    LEFT JOIN  comp_tag_data ctd ON r.id = ctd.res_id`;
+    let matrixHeaderSQL = `SELECT "root" AS 'Header', "root" AS accessor, NULL AS parent UNION
+        SELECT cd.domain AS item, concat("L1_",cd.id) AS id, "root" AS parent
+        FROM comp_domain cd
+        JOIN comp_subdomain sd ON cd.id = sd.parent_domain UNION
+        SELECT sd.sub_domain AS item, CONCAT("L2_",sd.id), CONCAT("L1_",parent_domain) AS parent
+        FROM comp_subdomain sd
+        JOIN comp_tags ct1 ON sd.id = ct1.parent_subdomain UNION
+        SELECT tag AS item, CONCAT("L3_", id), CONCAT("L2_", parent_subdomain) AS parent
+        FROM comp_tags`
+
+    //Get header data from db and create object tree
+    let headersRaw = await runQuery(matrixHeaderSQL);
+    let treeHeaderData = createMatrixHeaderTree(headersRaw);
+
+    //Get data from db and create skills data format
+    let dataRaw = await runQuery(matrixDataSQL);
+    let userData = createMatrixData(dataRaw);
+    
+
+    res.status(200).json({ treeHeaderData, userData });
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+function createMatrixHeaderTree(data) {
+  const idMapping = data.reduce((acc, el, i) => {
+    acc[el.accessor] = i;
+    return acc;
+  }, {});
+
+  let root;
+  data.forEach((el) => {
+    if (el.parent === null) {
+      root = el;
+      return;
+    }
+    const parentEl = data[idMapping[el.parent]];
+    parentEl.columns = [...(parentEl.columns || []), el];
+  });
+  return root;
+}
+
+function createMatrixData(data) {
+
+  const distNames = [...new Set(data.map(item => item.name))];
+  let userArr = [];
+  
+  for (const name of distNames) {  
+    let userObj = {};
+    userObj['name'] = name
+    // For data records
+    for (const [key, item] of Object.entries(data)) {
+      if (item.name === name && item.skill_item !== null){
+        userObj[item.skill_item] = "Y"
+  
+      }
+    }
+    userArr.push(userObj); 
+  }
+
+  return userArr;
+
+}
