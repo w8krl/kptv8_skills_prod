@@ -402,7 +402,7 @@ const runQuery = (sql) => new Promise((resolve, reject) => {
 app.post('/getMatrixData', async (req, res) => {
   try {
 
-    let matrixDataSQL = `SELECT  r.id, r.name,  CONCAT("L3_", ctd.id) AS 'skill_item'  FROM res r 
+    let matrixDataSQL = `SELECT  r.id, r.name,  CONCAT("L3_", ctd.comp_tag_id) AS 'skill_item'  FROM res r 
     LEFT JOIN  comp_tag_data ctd ON r.id = ctd.res_id`;
     let matrixHeaderSQL = `SELECT "root" AS 'Header', "root" AS accessor, NULL AS parent UNION
         SELECT cd.domain AS item, concat("L1_",cd.id) AS id, "root" AS parent
@@ -417,6 +417,10 @@ app.post('/getMatrixData', async (req, res) => {
     //Get header data from db and create object tree
     let headersRaw = await runQuery(matrixHeaderSQL);
     let treeHeaderData = createMatrixHeaderTree(headersRaw);
+
+    // Inject Name
+    // treeHeaderData.push({Header:"Name",accessor: "name"})
+
 
     //Get data from db and create skills data format
     let dataRaw = await runQuery(matrixDataSQL);

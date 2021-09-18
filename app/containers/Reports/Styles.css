@@ -1,3 +1,41 @@
 td {
-  color:red;
+  white-space: nowrap;
+  /* border-style: '1px solid grey'; */
 }
+
+table > thead > tr {
+  border-style: unset;
+}
+
+
+table > thead > tr:nth-child(3) > th{
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(-145deg);
+}
+
+/* Set striping  */
+tbody> tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+tbody > th, td {
+  border: 1px solid white;
+}
+tbody > th, tr {
+  line-height: 0;
+}
+
+/* Highlight if value set  */
+tbody > th,  td:nth-child(n+2):not(:empty)  {
+  background-color: rgb(91, 255, 91);
+  font-weight: bold;
+}
+
+
+table{
+  display:block;
+  overflow-x: auto;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 3px;
+  ;}

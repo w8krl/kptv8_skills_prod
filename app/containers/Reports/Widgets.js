@@ -188,7 +188,7 @@ function DashWidgets(props) {
             </CounterWidget>}
         </Grid>
         <Grid item xs={6} md={12}>
-        <SalesChartWidget />
+        {/* <SalesChartWidget /> */}
         </Grid>              
       </Grid>
     </div>
