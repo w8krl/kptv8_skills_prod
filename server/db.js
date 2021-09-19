@@ -15,7 +15,6 @@ app.use(cors());
 const fileUpload = require('express-fileupload');
 
 app.use(fileUpload());
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -26,6 +25,11 @@ const db = mysql.createConnection({
   database: 'res_mgr',
 });
 
+
+//////////////////
+//
+// Resource Creation & Skill management Functions
+//
 const createUser = (body) => {
   const {
     name,
@@ -210,7 +214,7 @@ const getAssignments = (id) => new Promise((resolve, reject) => {
   const sql = `SELECT CONCAT( left(MONTHNAME(ra.start),3) , " '",right(YEAR(ra.start), 2)) AS time, 
         ra.title, 
         ra.desc, 
-        ra.end, 
+        ra.actual_end as end, 
         ra.id_res,
         r.avatar,
         r.name,
@@ -263,7 +267,11 @@ app.post('/userProfile', async (req, res) => {
   }
 });
 
+//////////////////
+//
 // Dashboard data
+//
+
 
 const getDashStats = () => new Promise((resolve, reject) => {
   const sql = `SELECT   CASE WHEN actual_end IS null THEN 'active' ELSE 'completed' END AS name,
@@ -311,6 +319,9 @@ const getDashStats = () => new Promise((resolve, reject) => {
     });
 });
 
+
+
+
 const getActRes = () => new Promise((resolve, reject) => {
   const sql = `SELECT 
   CASE WHEN active_status NOT IN ('active','inactive') THEN 'other' ELSE active_status END AS name,
@@ -325,22 +336,59 @@ const getActRes = () => new Promise((resolve, reject) => {
     });
 });
 
+
+const getResAssignedToProj = () => new Promise((resolve, reject) => {
+  const sql = `SELECT p.project_name AS name, COUNT(*) AS value FROM res_assignments ra
+  LEFT JOIN projects p ON ra.id_proj = p.id_project
+  -- WHERE p.project_end IS NOT null
+  GROUP BY 1`;
+    
+  db.query(sql,
+    (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(results);
+    });
+});
+
+
+const getProjects = () => new Promise((resolve, reject) => {
+  const sql = `SELECT 
+  id_project,
+  project_name,
+  project_summary,
+  client,
+  project_avatar
+  FROM projects`;
+    
+  db.query(sql,
+    (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(results);
+    });
+});
+
+
+
 app.post('/dashData', async (req, res) => {
   try {
     const actAssignments = await getDashStats();
     const actRes = await getActRes();
-    res.status(200).json({ actAssignments, actRes });
+    const projRes = await getResAssignedToProj();
+    const projects = await getProjects();
+    res.status(200).json({ actAssignments, actRes, projRes,projects });
   } catch (e) {
     res.sendStatus(500);
   }
 });
 
-
-
-
-
-
-//Auth user
+//////////////////
+//
+// Auth User#
+//
 
 const verifyUser = (email) => new Promise((resolve, reject) => {
   const sql = "select email, active from sys_users where email = ? limit 1";
@@ -381,9 +429,11 @@ app.listen(port, () => {
 });
 
 
-// Matrix data UNDER DEVELOPMENT
 
-
+//////////////////
+//
+// Generic DB query function
+//
 
 const runQuery = (sql) => new Promise((resolve, reject) => {
   db.query(sql,
@@ -395,9 +445,10 @@ const runQuery = (sql) => new Promise((resolve, reject) => {
     });
 });
 
-// Table headers 
-
-
+//////////////////
+//
+// Skills Matrix functions
+//
 
 app.post('/getMatrixData', async (req, res) => {
   try {

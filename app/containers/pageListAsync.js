@@ -76,8 +76,12 @@ export const Profile = loadable(() =>
   import ('./UserProfile'), {
     fallback: <Loading />,
   });
-  export const Matrix = loadable(() =>
-  import ('./Reports/Matrix'), {
+  export const SkillsDashboard = loadable(() =>
+  import ('./Reports/Dashboard'), {
+    fallback: <Loading />,
+  });  
+  export const SkillsMatrix = loadable(() =>
+  import ('./Reports/SkillsMatrix'), {
     fallback: <Loading />,
   });  
   export const SkillSelector = loadable(() =>

@@ -18,7 +18,6 @@ function SkillsTable(props) {
   // const colData2 = []
   colData.unshift({ Header: "", accessor: "name" });
 
-  
   const columns = React.useMemo(() => colData, [])
 
 
@@ -45,9 +44,7 @@ function SkillsTable(props) {
 
   console.log(headerGroups)
   return (
-    <PapperBlock whiteBg noMargin title="Resource Data" >
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
+    <Paper>
           <table style={{display:"block", overflowX:"auto"}} {...getTableProps()}>
             <thead>
               {headerGroups.map((headerGroup, idx) => (
@@ -115,17 +112,11 @@ function SkillsTable(props) {
           ))}
         </select>
       </div>
-        </Grid>
-      </Grid>
 
-    </PapperBlock>
+    </Paper>
 
   )
 }
-
-
-
-
 
 const SkillsMatrix = () => {
 
