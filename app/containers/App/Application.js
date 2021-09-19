@@ -12,11 +12,12 @@ import {
   Table,
   Parent,
   ResourceSearch,
-  Matrix,
   CvList,
   SkillSelector,
   ResList,
-  Profile
+  Profile,
+  SkillsDashboard,
+  SkillsMatrix
 } from '../pageListAsync';
 
 function Application(props) {
@@ -38,7 +39,8 @@ function Application(props) {
         <Route path="/app/pages/not-found" component={NotFound} />
         <Route path="/app/pages/error" component={Error} />
         <Route path="/app/Resource-Search" component={ResourceSearch} />
-        <Route path="/app/Matrix" component={Matrix} />
+        <Route path="/app/Skills-Dashboard" component={SkillsDashboard} />
+        <Route path="/app/Skills-Matrix" component={SkillsMatrix} />
         <Route path="/app/add-resource" component={SkillSelector} />
         <Route path="/app/resource-list" component={ResList} />
         <Route path="/app/CV-list" component={CvList} />

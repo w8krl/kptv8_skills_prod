@@ -88,6 +88,15 @@ const styles = theme => ({
     '& svg': {
       color: theme.palette.secondary.light,
     },
+  },
+  success: {
+    background: 'green',
+    '& $title, $counter': {
+      color: theme.palette.common.white,
+    },
+    '& svg': {
+      color: theme.palette.secondary.light,
+    },
   }
 });
 
@@ -116,6 +125,8 @@ function CounterWidget(props) {
         return classes.secondaryMain;
       case 'secondary-dark':
         return classes.secondaryDark;
+      case 'success':
+        return classes.success;
       default:
         return classes.primaryMain;
     }

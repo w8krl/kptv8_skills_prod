@@ -56,7 +56,7 @@ module.exports = [
   },
   {
     key: 'reports',
-    name: 'Reports',
+    name: 'Skills Info',
     icon: 'pie_chart_outlined',
     child: [
       {
@@ -66,9 +66,15 @@ module.exports = [
       },
       {
         key: 'skills_report',
-        name: 'Skills Matrix Report',
+        name: 'Summary Dashboard',
         icon: 'pets',
-        link: '/app/matrix'
+        link: '/app/skills-dashboard'
+      },
+      {
+        key: 'skills_report',
+        name: 'Skills Matrix',
+        icon: 'pets',
+        link: '/app/skills-matrix'
       }
     ]
   },

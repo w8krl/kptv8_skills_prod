@@ -1,3 +1,140 @@
-.test >* button {
-    border-radius: 0% !important;
-  }
+
+/* Global Styles 
+Stop text wrap from table 
+ */
+
+ table{
+  display:block;
+  overflow-x: auto;
+  ;}
+
+
+
+td {
+  white-space: nowrap;
+}
+
+table > * th {
+  border-color: white;
+  border-width: 10px  !important;
+}
+
+/******************
+ Heading Styles
+ ******************/
+
+table > thead > tr:nth-child(3) > th:hover{
+  color: #101c2450;
+}
+
+
+/* Body */
+td:nth-child(n+1):hover{
+  color: white;
+  background-color: #0277bd50;
+}
+
+
+
+/* Rotate text from tr 3, th2 onwards */
+table > thead > tr:nth-child(3) > th:nth-child(n+2){
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  /* transform: rotate(-170deg); */
+  min-width:50px;
+}
+
+table > thead > tr{
+  background-color: #2e597250;
+  z-index: -1;
+  color:white;
+  border-width: 2px;
+  font-size: 1.5rem;
+}
+
+/* Set borders */
+tr, th {
+  border-color: white;
+  border-width: 2px;
+}
+
+table >* th:nth-child(1){
+  transform: unset;
+  background-color: rgb(255, 255, 255);
+}
+
+/* 3rd header 1st th */
+table >* tr:nth-child(3) > th:nth-child(1)::after{
+  content: "Name";
+  color:white;
+  font-size: 1.5rem;
+  display: block;
+  padding-bottom: 20%;
+}
+table >* tr:nth-child(3) > th:nth-child(1){
+  background-color: #355b7050;
+  z-index: 1;
+}
+table >* tr:nth-child(3) > th:nth-child(1):hover{
+  background-color: #0277bd;
+  transition: 1s;
+}
+
+
+
+
+
+/* Set striping  */
+tbody> tr:nth-child(even) {
+  background-color: #38758d50;
+}
+
+tbody > th, td {
+  border: 1px solid white;
+}
+tbody > th, tr {
+  line-height: 0;
+}
+
+
+/* Bold Names */
+
+
+
+
+
+/* SKILLS MATRIX CONTENT BASED */
+/* Highlight if value set  */
+tbody > th,  td:nth-child(n+2):not(:empty)  {
+  background-color: rgb(91, 255, 91);
+  font-weight: bold;
+  z-index: -1;
+}
+
+
+
+table thead th, td:nth-child(1) {
+  position: sticky;
+}
+
+table tbody th {
+  position: relative;
+}
+table thead th:first-child, td:first-child {
+  position: sticky;
+  left: 0;
+  
+}
+
+th:nth-child(1), td:nth-child(1){
+  min-width: 26rem;
+  z-index: 1;
+}
+
+
+
+td:nth-child(1){
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #222;
+}
