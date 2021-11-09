@@ -2,21 +2,13 @@ import React, { useMemo, useState, useEffect } from "react";
 import {withRouter} from 'react-router';
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { DataGrid, GridToolbarContainer,
-  GridToolbarExport} from '@material-ui/data-grid';
 import { Profile}  from '../pageListAsync';
+import MUIDataTable from "mui-datatables";
 
 
 
 
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
 
 const styles = theme => ({
   table: {
@@ -41,65 +33,77 @@ const styles = theme => ({
   }
 });
 
+
+
 const columns = [
   {
-    field: 'name',
-    name: 'name',
-    headerName: 'Name',
-    description: 'User name',
-    width: 150,
-    editable: false,
+
+      name: "id",
+      label: "id",
+      options: {
+        display: "excluded",
+        filter:false
+      }      
   },
   {
-    field: 'gender',
+
+      name: "name",
+      label: "Name",
+      options: {
+       filter: false,
+       sort: true}
+  },
+  {
     name: 'gender',
-    headerName: 'Gender',
-    width: 150,
-    editable: false,
-  },
+    label: 'Gender',
+    options: {
+      filter: true,
+      sort: true}
+ },
   {
-    field: 'pri_contact_no',
     name: 'pri_contact_no',
-    headerName: 'Contact',
-    width: 150,
-    editable: false,
+    label: 'Primary Tel.',
+      options: {
+       filter: true,
+       sort: true}
   },
   {
-    field: 'role',
     name: 'role',
-    headerName: 'Role',
-    width: 150,
-    editable: false,
-  },
+    label: 'Role',
+    options: {
+      filter: true,
+      sort: true}
+ },
   {
-    field: 'service_desc',
     name: 'service_desc',
-    headerName: 'Service',
-    width: 150,
-    editable: false,
-  },
+    label: 'Service',
+    options: {
+      filter: true,
+      sort: true}
+ },
   {
-    field: 'country',
     name: 'country',
-    headerName: 'Country',
-    width: 150,
-    editable: false,
-  },
+    label: 'Country',
+    options: {
+      filter: true,
+      sort: true}
+ },
   {
-    field: 'region',
     name: 'region',
-    headerName: 'Region',
-    width: 150,
-    editable: false,
-  },
+    label: 'Region',
+    options: {
+      filter: true,
+      sort: true}
+ },
   {
-    field: 'email',
-    name: 'Email',
-    headerName: 'Email',
-    width: 150,
-    editable: false,
-  },
+    name: 'email',
+    label: 'Email',
+    options: {
+      filter: true,
+      sort: true}
+ },
 ];
+
 
 function handleCellEditCommit(e){
   window.confirm("Are you sure?");
@@ -110,12 +114,6 @@ function handleCellEditCommit(e){
 export default function DataTable() {
   let history = useHistory();
 
-  function handleCellClick(e) {
-    history.push({pathname: "/app/user-settings", state: {profileId: e.id},search: `?user=${e.id}`,});
-    // let target = `/app/profile/${e.id}`;
-    // return <Redirect to={target}/>
-  }
-
   const [loadingData, setLoadingData] = useState(true);
   const [data, setData] = useState([]);
 
@@ -124,35 +122,33 @@ export default function DataTable() {
       await axios
         .post("api/getRes")
         .then((response) => {
-          // check if the data is populated
-          // console.log(response.data);
           setData(response.data);
-          // you tell it that you had the result
           setLoadingData(false);
+
+          
         });
     }
     if (loadingData) {
-      // if the result is not ready so you make the axios call
       getData();
     }
   }, []);
 
-
+const options = {
+  // resizableColumns: true,
+  filterType: "dropdown",
+  onRowClick: (row, cell) => {
+    let id = row[0];
+    history.push({pathname: "/app/user-settings", state: {profileId: id},search: `?user=${id}`,});
+  }
+};
 
   return (
     <div style={{ height: 700, width: '100%' }}>
-      <h1>Test</h1>
-      <DataGrid
-        rows={data}
+      <MUIDataTable
+        title={"Resource List"}
+        data={data}
         columns={columns}
-        pageSize={30}
-        checkboxSelection
-        onCellEditCommit={handleCellEditCommit}
-        disableSelectionOnClick
-        onRowClick={(handleCellClick)}
-        components={{
-          Toolbar: CustomToolbar,
-        }}
+        options={options}
       />
     </div>
   );

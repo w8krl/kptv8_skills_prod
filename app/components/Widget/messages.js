@@ -274,7 +274,7 @@ export default defineMessages({
   },
   born: {
     id: `${scope}.about.born`,
-    defaultMessage: 'Birthday',
+    defaultMessage: 'Date of Birth',
   },
   phone: {
     id: `${scope}.about.phone`,

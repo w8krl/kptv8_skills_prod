@@ -12,11 +12,14 @@ Stop text wrap from table
 
 td {
   white-space: nowrap;
+  line-height: 0;
+  padding: 2px ​2px 6px 2px !important;
 }
 
 table > * th {
   border-color: white;
   border-width: 10px  !important;
+  border-bottom:unset !important;
 }
 
 /******************
@@ -49,14 +52,16 @@ table > thead > tr{
   z-index: -1;
   color:white;
   border-width: 2px;
-  font-size: 1.5rem;
+  font-size: 10px;
 }
 
 /* Set borders */
 tr, th {
   border-color: white;
   border-width: 2px;
+  font-size:10px !important;
 }
+
 
 table >* th:nth-child(1){
   transform: unset;
@@ -67,12 +72,13 @@ table >* th:nth-child(1){
 table >* tr:nth-child(3) > th:nth-child(1)::after{
   content: "Name";
   color:white;
-  font-size: 1.5rem;
+  font-size: 10px;
   display: block;
   padding-bottom: 20%;
+  z-index: 1;
 }
 table >* tr:nth-child(3) > th:nth-child(1){
-  background-color: #355b7050;
+  background-color: #355b70;
   z-index: 1;
 }
 table >* tr:nth-child(3) > th:nth-child(1):hover{
@@ -111,7 +117,9 @@ tbody > th,  td:nth-child(n+2):not(:empty)  {
   z-index: -1;
 }
 
-
+td:nth-child(n+2){
+  z-index: -1;
+}
 
 table thead th, td:nth-child(1) {
   position: sticky;
@@ -123,7 +131,7 @@ table tbody th {
 table thead th:first-child, td:first-child {
   position: sticky;
   left: 0;
-  
+  color:red;
 }
 
 th:nth-child(1), td:nth-child(1){
@@ -131,10 +139,18 @@ th:nth-child(1), td:nth-child(1){
   z-index: 1;
 }
 
+th{
+  padding:6px 2px 6px 2px !important;
+  min-width: unset !important;
+}
+
 
 
 td:nth-child(1){
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 10px;
   color: #222;
+  min-width: 26rem;
+  z-index: 100;
+  background-color: rgb(176, 232, 241);
 }

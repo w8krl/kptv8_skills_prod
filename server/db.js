@@ -523,3 +523,23 @@ function createMatrixData(data) {
   return userArr;
 
 }
+
+
+// CV List
+
+
+app.post('/getCvs', async (req, res) => {
+  try {
+    let cvListSQL = `
+    SELECT cv.id, cv.filename, cv.path, r.name FROM cv_list cv 
+    LEFT JOIN res r ON cv.res_id = r.id
+    WHERE r.cv_path IS NOT null
+    AND r.name IS NOT null
+    `;
+    //Get header data from db and create object tree
+    let cvList = await runQuery(cvListSQL);
+    res.status(200).json({ cvList });
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});

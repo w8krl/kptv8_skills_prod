@@ -7,19 +7,34 @@ import Grid from '@material-ui/core/Grid';
 import {PapperBlock} from 'enl-components';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
-import Table from 'react-bootstrap/Table'
+// import Table from 'react-bootstrap/Table'
 import Styles from './Styles.css'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 function SkillsTable(props) {
 
   const { colData } = props;
   const { data } = props;
 
-  // const colData2 = []
+  // Add name field to columns at top level
   colData.unshift({ Header: "", accessor: "name" });
 
   const columns = React.useMemo(() => colData, [])
 
+  const dataToDownload = (data, columns) =>
+  data.map(record =>
+    columns.reduce((recordToDownload, column) => {
+      recordToDownload[column.Header] = record[column.accessor];
+      return recordToDownload;
+    }, {})
+  );
+
+  // const currentRecords = this.reactTable.getResolvedState().sortedData;
+  console.log(dataToDownload(data, columns));
 
   const {
     getTableProps,
@@ -42,32 +57,31 @@ function SkillsTable(props) {
     initialState: { pageSize: 20 }
   }, usePagination)
 
-  console.log(headerGroups)
   return (
     <Paper>
-          <table style={{display:"block", overflowX:"auto"}} {...getTableProps()}>
-            <thead>
+          <Table size="small" style={{display:"block", overflowX:"auto"}} {...getTableProps()}>
+            <TableHead>
               {headerGroups.map((headerGroup, idx) => (
-                <tr key={idx} {...headerGroup.getHeaderGroupProps()}>
+                <TableRow key={idx} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps({style: { whiteSpace: 'nowrap' }})}>{column.render('Header')}</th>
+                    <TableCell {...column.getHeaderProps({style: { whiteSpace: 'nowrap' }})}>{column.render('Header')}</TableCell>
                   ))}
-                </tr>
+                </TableRow>
               ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
+            </TableHead>
+            <TableBody {...getTableBodyProps()}>
               {page.map((row, i) => {
                 prepareRow(row)
                 return (
-                  <tr {...row.getRowProps()}>
+                  <TableRow {...row.getRowProps()}>
                     {row.cells.map(cell => {
-                      return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
                     })}
-                  </tr>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           <div className="pagination">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
