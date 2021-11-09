@@ -2,8 +2,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import {withRouter} from 'react-router';
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { Profile}  from '../pageListAsync';
 import MUIDataTable from "mui-datatables";
+import { Profile}  from '../pageListAsync';
 
 
 
