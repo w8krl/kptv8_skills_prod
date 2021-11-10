@@ -21,12 +21,6 @@ module.exports = [
         icon: 'account_box',
         link: '/app/resource-search'
       
-      },
-      {
-        key: 'aaaa',
-        name: 'Profile Search',
-        icon: 'account_box',
-        link: '/app/profile'
       }
     ]
   },
@@ -39,12 +33,6 @@ module.exports = [
         key: 'user-admin',
         name: 'Resource Admin',
         title: true,
-      },
-      {
-        key: 'not_found_page',
-        name: 'TESTING',
-        icon: 'account_box',
-        link: '/app/add-resource'
       },
       {
         key: 'not_found_page',

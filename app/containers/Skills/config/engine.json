@@ -1,7 +1,7 @@
 {
   "engineName": "resource-search",
-  "endpointBase": "http://192.168.20.128:3002",
-  "searchKey": "search-6gxrfdvcqcjg9svmgymwihj6",
+  "endpointBase": "https://res-search-c44.ent.us-central1.gcp.cloud.es.io",
+  "searchKey": "search-qi9mp5ubzs55gqtioqsdsp2b",
   "titleField": "name",
   "urlField": "id",
   "resultFields": [
@@ -22,17 +22,8 @@
     "id",
     "avatar"
   ],
-  "sortFields": [
-    "active_status",
-    "pri_rate"
-  ],
-  "facets": [
-    "service_desc",
-    "skills",
-    "pri_rate",
-    "country",
-    "active_status"
-  ],
+  "sortFields": ["active_status", "pri_rate"],
+  "facets": ["service_desc", "skills", "pri_rate", "country", "active_status"],
   "displayFields": [
     "id",
     "name",

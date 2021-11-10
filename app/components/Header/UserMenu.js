@@ -55,7 +55,7 @@ function UserMenu(props) {
         color="inherit"
         className={classNames(classes.notifIcon, dark ? classes.dark : classes.light)}
       >
-        <Badge className={classes.badge} badgeContent={4} color="secondary">
+        <Badge className={classes.badge} badgeContent={1} color="secondary">
           <NotificationsActiveOutlined />
         </Badge>
       </IconButton>
@@ -79,14 +79,7 @@ function UserMenu(props) {
         open={openMenu === 'notification'}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageInfo}>
-            <ListItemAvatar>
-              <Avatar alt="User Name" src={avatarApi[0]} />
-            </ListItemAvatar>
-            <ListItemText primary={dummy.text.subtitle} secondary={dummy.text.date} />
-          </div>
-        </MenuItem>
+
         <Divider variant="inset" />
         <MenuItem onClick={handleClose}>
           <div className={messageStyles.messageInfo}>
@@ -95,42 +88,12 @@ function UserMenu(props) {
                 <Info />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={dummy.text.sentences} className={classes.textNotif} secondary={dummy.text.date} />
+            <ListItemText primary="Welcome!" className={classes.textNotif} secondary="Soon you will find notifications here" />
           </div>
         </MenuItem>
         <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageSuccess}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Check />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={dummy.text.subtitle} className={classes.textNotif} secondary={dummy.text.date} />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageWarning}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Warning />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={dummy.text.subtitle} className={classes.textNotif} secondary={dummy.text.date} />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageError}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Error />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Suspendisse pharetra pulvinar sollicitudin. Aenean ut orci eu odio cursus lobortis eget tempus velit. " className={classes.textNotif} secondary="Jan 9, 2016" />
-          </div>
-        </MenuItem>
+
+
       </Menu>
       <Button onClick={handleMenu('user-setting')}>
         <Avatar

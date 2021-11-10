@@ -2,7 +2,7 @@ const dummyContents = {
   user: {
     name: 'Karl Webster',
     title: 'Administrator',
-    avatar: 'https://media-exp1.licdn.com/dms/image/C4D03AQEYuwAKwaRj1Q/profile-displayphoto-shrink_800_800/0/1616414528561?e=1634774400&v=beta&t=ra1de8Ow0iDNrevzvOwW8iSBLKBoy4PQ-7FJU-yt8yU',
+    avatar: 'https://cloud.kptv8.com/images/avatars/pp_boy3.svg',
     status: 'online'
   },
   text: {

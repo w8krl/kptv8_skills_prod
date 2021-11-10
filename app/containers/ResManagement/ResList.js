@@ -8,8 +8,6 @@ import { Profile}  from '../pageListAsync';
 
 
 
-
-
 const styles = theme => ({
   table: {
     '& > div': {

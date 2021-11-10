@@ -280,7 +280,7 @@ function Step3(props) {
                     <SkillsTreeSelector childToParent={props.childToParent} />
                 </Grid>
                 <Grid item xs={6}>
-                    {skillsSelected > 0 && <Typography variant="h6">Total SKills Selected: {skillsSelected}</Typography>}
+                    {skillsSelected > 0 && <Typography variant="h6">Skill Selected: {skillsSelected}</Typography>}
                     <AddSkills checkedData={props.checkedData} />
                 </Grid>
 

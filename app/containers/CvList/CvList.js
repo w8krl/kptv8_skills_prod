@@ -6,6 +6,8 @@ import MUIDataTable from "mui-datatables";
 import { Profile}  from '../pageListAsync';
 
 
+
+
 const styles = theme => ({
   table: {
     '& > div': {
@@ -43,8 +45,8 @@ const columns = [
   },
   {
 
-      name: "CV Filename",
-      label: "filename",
+      name: "filename",
+      label: "Filename",
       options: {
        filter: false,
        sort: true}
@@ -53,6 +55,22 @@ const columns = [
 
       name: "name",
       label: "Name",
+      options: {
+       filter: false,
+       sort: true}
+  },
+  {
+
+      name: "path",
+      label: "path",
+      options: {
+       filter: false,
+       sort: true}
+  },
+  {
+
+      name: "date_uploaded",
+      label: "Upload Date",
       options: {
        filter: false,
        sort: true}
@@ -66,7 +84,7 @@ function handleCellEditCommit(e){
 
 
 
-export default function CVList() {
+export default function DataTable() {
   let history = useHistory();
 
   const [loadingData, setLoadingData] = useState(true);
@@ -88,22 +106,22 @@ export default function CVList() {
     }
   }, []);
 
-// const options = {
-//   // resizableColumns: true,
-//   filterType: "dropdown",
-//   onRowClick: (row, cell) => {
-//     let id = row[0];
-//     history.push({pathname: "/app/user-settings", state: {profileId: id},search: `?user=${id}`,});
-//   }
-// };
+const options = {
+  // resizableColumns: true,
+  filterType: "dropdown",
+  onRowClick: (row, cell) => {
+    let id = row[0];
+    history.push({pathname: "/app/user-settings", state: {profileId: id},search: `?user=${id}`,});
+  }
+};
 
   return (
     <div style={{ height: 700, width: '100%' }}>
       <MUIDataTable
-        title={"Resource List"}
+        // title={"Resource List"}
         data={data}
         columns={columns}
-        // options={options}
+        options={options}
       />
     </div>
   );

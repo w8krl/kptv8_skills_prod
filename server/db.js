@@ -528,18 +528,37 @@ function createMatrixData(data) {
 // CV List
 
 
-app.post('/getCvs', async (req, res) => {
-  try {
-    let cvListSQL = `
-    SELECT cv.id, cv.filename, cv.path, r.name FROM cv_list cv 
-    LEFT JOIN res r ON cv.res_id = r.id
-    WHERE r.cv_path IS NOT null
-    AND r.name IS NOT null
-    `;
-    //Get header data from db and create object tree
-    let cvList = await runQuery(cvListSQL);
-    res.status(200).json({ cvList });
-  } catch (e) {
-    res.sendStatus(500);
-  }
+// app.post('/getCvs', async (req, res) => {
+//   try {
+//     let cvListSQL = `
+//     SELECT cv.id, cv.filename, cv.path, r.name FROM cv_list cv 
+//     LEFT JOIN res r ON cv.res_id = r.id
+//     WHERE r.cv_path IS NOT null
+//     AND r.name IS NOT null
+//     `;
+//     //Get header data from db and create object tree
+//     let cvList = await runQuery(cvListSQL);
+//     res.status(200).json({ cvList });
+//   } catch (e) {
+//     res.sendStatus(500);
+//   }
+// });
+
+
+app.post('/getCvs', (req, res) => {
+
+  let cvListSQL = `
+  SELECT cv.id, cv.filename, cv.path, r.name, cv.date_uploaded FROM cv_list cv 
+  LEFT JOIN res r ON cv.res_id = r.id
+  WHERE r.cv_path IS NOT null
+  AND r.name IS NOT null
+  `;
+
+  db.query(cvListSQL, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
 });
